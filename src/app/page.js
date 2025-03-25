@@ -99,6 +99,43 @@ const RippleText = ({ text, className = "" }) => {
   );
 };
 
+const ExperienceItem = ({ title, children }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <div className="mb-6">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-between w-full text-left"
+      >
+        <h3 className="text-xl font-semibold">{title}</h3>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 9L12 15L18 9" stroke="white" strokeWidth="2"/>
+          </svg>
+        </motion.div>
+      </button>
+      
+      <motion.div
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ 
+          height: isOpen ? 'auto' : 0,
+          opacity: isOpen ? 1 : 0
+        }}
+        transition={{ duration: 0.3 }}
+        className="overflow-hidden"
+      >
+        <div className="pt-4 pb-2">
+          {children}
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 const Page = () => {
   return (
     <>
@@ -164,46 +201,65 @@ const Page = () => {
             </div>
           </div>
 
+          {/* Education Section */}
+          <div className='max-w-2xl w-full'>
+          <h2 className='text-3xl font-bold mb-6'>education:</h2>
+          <div className='space-y-8'>
+          <div>
+                <ExperienceItem title="University of Auckland">
+                  <p>Bachelor of Science, Majoring in Computer Science and IT Management        -- 2023-2025</p>
+                  <h4 className='text 2xl font-bold'>Relevant Courses:</h4>
+                  <p>Principles of Programming, Data Wrangling and Big Data, Data Management, Computer Organisation, Object Oriented Software Development, Digital Systems, Mathematics for Computer Science, Information Tools for Business, Machine Learning. </p>
+                </ExperienceItem>
+              </div>
+          </div>
+          </div>
+          
           {/* Experience Section */}
           <div className='max-w-2xl w-full'>
-            <h2 className='text-3xl font-bold mb-6'>experience:</h2>
+            <h2 className='text-3xl font-bold mb-6 pt-6'>experience:</h2>
             <div className='space-y-8'>
               <div>
                 <h3 className='text-2xl font-semibold mb-2'>Currently:</h3>
-                <h4 className='text-xl mb-4'>Founding President of UOACS (University of Auckland CompSci Society)</h4>
+                <ExperienceItem title="Founding President of UOACS (University of Auckland CompSci Society)">
                 <p>Halfway through my degree, I realized I should do a bit more at uni. I always had a thought in the back of my mind wondering why there wasn't a computer science society at the largest university in New Zealand. So... I created one.</p>
                 <p className='mt-4'>From no money, no team, no members, no formal recognition to over five figures in sponsorship revenue, 300+ paid members and an awesome team of 22 executives that help me run this club. It has been the most rewarding and stressful project of my life and I wouldn't change it for the world.</p>
+                </ExperienceItem>
               </div>
 
               <div>
-                <h3 className='text-2xl font-semibold mb-2'>Outreach Executive at Velocity</h3>
+              <ExperienceItem title="Outreach Executive at Velocity">
                 <p>I always heard about Velocity and the opportunities they provide and never took action until my friend Ray told me about the applications. Following my experience creating the club, I found a knack for building things from the group up and Velocity seemed like the best place to go</p>
                 <p className='mt-4'>Since joining, I've made so many amazing memories, met the most insipiring people and have helped set up events for the community.</p>
+              </ExperienceItem>
               </div>
 
               <div>
-                <h3 className='text-2xl font-semibold mb-2'>UX/UI Designer at WDCC (MedRevue)</h3>
+                <ExperienceItem title="UX/UI Designer at WDCC (MedRevue)">
                 <p>This year I have joined WDCC as a pure designer, working on the MedRevue project. The Auckland Med Revue is an annual charity variety show performed by University of Auckland medical students, featuring humorous skits, songs, and dances, with proceeds supporting causes like the Cancer Society of New Zealand.</p>
+                </ExperienceItem>
               </div>
 
               <div>
-                <h3 className='text-2xl font-semibold mb-2'>Generalist Volunteer at MyUniClub</h3>
+                <ExperienceItem title="Generalist Volunteer at MyUniClub">
                 <p>MyUniClub is a fresh startup that is working towards becoming the best Saas for university clubs. My role is more of an advisory position to guide the founding team in the right direction since I am heavily involved in clubs.</p>
+                </ExperienceItem>
               </div>
 
               <div>
-                <h3 className='text-2xl font-semibold mb-2'>Keyholder at AS Colour</h3>
+                <ExperienceItem title="Keyholder at AS Colour">
                 <p>I help customers find the right balance between their needs and wants while strategically upselling products. Working in a commission-based environment, I quickly read people and adapt to their preferences, ensuring a great experience while driving sales. This role continuously sharpens my interpersonal skills and quick thinking.</p>
+                </ExperienceItem>
               </div>
 
-              <h3 className='text-2xl font-semibold mb-2'>Previously:</h3>
-              <h3 className='text-2xl font-semibold mb-2'>Functional Analyst Intern at UOA</h3>
-              <h3 className='text-2xl font-semibold mb-2'>Software Developer at WDCC (Passport)</h3>
-              <h3 className='text-2xl font-semibold mb-2'>Piano Teacher</h3>
-              <h3 className='text-2xl font-semibold mb-2'>Customer Service Representative at Briscoes Head Office</h3>
-              <h3 className='text-2xl font-semibold mb-2'>Sales Assistant at Briscoes PC</h3>
-              <h3 className='text-2xl font-semibold mb-2'>After School Care Helper at sKids</h3>
-              <h3 className='text-2xl font-semibold mb-2'>Pharmacy Assistant at Chemist Warehouse</h3>
+              <h3 className='text-xl font-semibold mb-2'>Previously:</h3>
+              <h3 className='text-xl font-semibold mb-2'>Functional Analyst Intern at UOA</h3>
+              <h3 className='text-xl font-semibold mb-2'>Software Developer at WDCC (Passport)</h3>
+              <h3 className='text-xl font-semibold mb-2'>Piano Teacher</h3>
+              <h3 className='text-xl font-semibold mb-2'>Customer Service Representative at Briscoes Head Office</h3>
+              <h3 className='text-xl font-semibold mb-2'>Sales Assistant at Briscoes PC</h3>
+              <h3 className='text-xl font-semibold mb-2'>After School Care Helper at sKids</h3>
+              <h3 className='text-xl font-semibold mb-2'>Pharmacy Assistant at Chemist Warehouse</h3>
             </div>
           </div>
         </div>
