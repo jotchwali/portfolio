@@ -197,7 +197,13 @@ const Page = () => {
               </div>
 
               <h3 className='text-2xl font-semibold mb-2'>Previously:</h3>
-
+              <h3 className='text-2xl font-semibold mb-2'>Functional Analyst Intern at UOA</h3>
+              <h3 className='text-2xl font-semibold mb-2'>Software Developer at WDCC (Passport)</h3>
+              <h3 className='text-2xl font-semibold mb-2'>Piano Teacher</h3>
+              <h3 className='text-2xl font-semibold mb-2'>Customer Service Representative at Briscoes Head Office</h3>
+              <h3 className='text-2xl font-semibold mb-2'>Sales Assistant at Briscoes PC</h3>
+              <h3 className='text-2xl font-semibold mb-2'>After School Care Helper at sKids</h3>
+              <h3 className='text-2xl font-semibold mb-2'>Pharmacy Assistant at Chemist Warehouse</h3>
             </div>
           </div>
         </div>
