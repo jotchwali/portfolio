@@ -3,15 +3,22 @@ import React from 'react'
 const Page = () => {
   return (
     <div className='bg-[#0A2ECE] min-h-screen text-white font-sans relative'>
+      {/* Home Button */}
+      <div className='absolute top-4 left-4 flex items-center space-x-2 text-white font-bold'>
+        <span className='text-sm'>home</span>
+        <span className='text-sm'>/</span>
+        <span className='text-sm'>家</span>
+      </div>
+
       {/* Hamburger Menu */}
       <div className='absolute top-4 right-4 space-y-2 cursor-pointer'>
-        <div className='w-8 h-2 bg-white rounded-full'></div>
-        <div className='w-8 h-2 bg-white rounded-full'></div>
-        <div className='w-8 h-2 bg-white rounded-full'></div>
+        <div className='w-14 h-1 bg-white rounded-full'></div>
+        <div className='w-10 h-1 bg-white rounded-full'></div>
+        <div className='w-8 h-1 bg-white rounded-full'></div>
       </div>
 
       {/* Vertical Chinese Characters */}
-      <div className='absolute right-4 bottom-4 text-2xl font-bold opacity-50 tracking-wider'>
+      <div className='absolute right-4 top-20 text-2xl font-bold opacity-100 tracking-wider'>
         李<br/>
         以<br/>
         勤
@@ -67,6 +74,8 @@ const Page = () => {
             <div>
               <h3 className='text-2xl font-semibold mb-2'>Keyholder at AS Colour</h3>
             </div>
+            <h1> </h1>
+            <h3 className='text-2xl font-semibold mb-2'>Previously:</h3>
           </div>
         </div>
       </div>
