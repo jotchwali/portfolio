@@ -52,7 +52,8 @@ const Page = () => {
 
             <div>
               <h3 className='text-2xl font-semibold mb-2'>Outreach Executive at Velocity</h3>
-              <p>I always heard about Velocity and the opportunities they provide and never took action until my friend Ray told me about the applications.</p>
+              <p>I always heard about Velocity and the opportunities they provide and never took action until my friend Ray told me about the applications. Following my experience creating the club, I found a knack for building things from the group up and Velocity seemed like the best place to go</p>
+            <p className='mt-4'>Since joining, I've made so many amazing memories, met the most insipiring people and have helped set up events for the community.</p>
             </div>
 
             <div>
