@@ -9,6 +9,7 @@ const Page = () => {
         <div className='w-8 h-2 bg-white rounded-full'></div>
         <div className='w-8 h-2 bg-white rounded-full'></div>
       </div>
+#comment
 
       {/* Vertical Chinese Characters */}
       <div className='absolute right-4 bottom-4 text-2xl font-bold opacity-50 tracking-wider'>
