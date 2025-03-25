@@ -111,7 +111,7 @@ const Page = () => {
         <div className="absolute top-4 left-4 flex items-center space-x-2 text-white font-bold">
           <span className="text-sm">home</span>
           <span className="text-sm">/</span>
-          <span className="text-sm">家</span>
+          <span className="text-sm">首页</span>
         </div>
 
         {/* Hamburger Menu */}
@@ -197,6 +197,7 @@ const Page = () => {
               </div>
 
               <h3 className='text-2xl font-semibold mb-2'>Previously:</h3>
+
             </div>
           </div>
         </div>
