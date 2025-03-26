@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
             <Link href="/devwork" className="text-sm font-bold hover:opacity-80 transition-opacity">dev work</Link>
             <Link href="/extracurriculars" className="text-sm font-bold hover:opacity-80 transition-opacity">extracurriculars</Link>
             <a href="https://www.youtube.com/channel/UCQY-6Qnas9B9F9ZrfQedQPQ" target="_blank" className="text-sm font-bold hover:opacity-80 transition-opacity">youtube</a>
-            <Link href="/contact" className="text-sm font-bold hover:opacity-80 transition-opacity">contact me</Link>
+            <Link href="/contactme" className="text-sm font-bold hover:opacity-80 transition-opacity">contact me</Link>
           </nav>
 
           {/* Mobile Menu Button - Visible only on mobile */}
@@ -81,7 +81,7 @@ export default function RootLayout({ children }) {
                 youtube
               </a>
               <Link 
-                href="/contact" 
+                href="/contactme" 
                 className="text-sm font-bold hover:opacity-80 transition-opacity"
                 onClick={() => setMobileMenuOpen(false)}
               >
