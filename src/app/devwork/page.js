@@ -134,7 +134,7 @@ const projects = [
 
 export default function DevWork() {
   return (
-    <div className="min-h-screen bg-white text-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0A2ECE] text-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-2">JOSHUA LI's</h1>
         <h2 className="text-2xl font-semibold mb-12 text-[#0A2ECE]">Dev / Design Work</h2>

@@ -8,7 +8,7 @@ export default function RootLayout({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark">
       <body className="bg-[#0A2ECE] min-h-screen text-white font-sans relative">
         {/* Header/Nav Bar */}
         <header className="fixed top-0 left-0 right-0 bg-[#0A2ECE] z-50 py-4 px-6 flex justify-between items-center border-b border-white/10">

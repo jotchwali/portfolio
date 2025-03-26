@@ -103,114 +103,114 @@ const RippleText = ({ text, className = "" }) => {
   );
 };
 const galleryImages = [
-  { 
-    id: 1, 
+  {
+    id: 1,
     src: '/gallery-images/teamlabs.png',
-    alt: 'Team Labs Japan', 
+    alt: 'Team Labs Japan',
     category: 'japan',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
-  { 
-    id: 2, 
-    src: '/gallery-images/naganomonkey.png',
-    alt: 'Nagano Monkeys', 
-    category: 'japan',
-    width: 1070,   // Add actual dimensions if known
-    height: 713   // Add actual dimensions if known
-  },
-  { 
-    id: 3, 
-    src: '/gallery-images/tokyoview.jpeg',
-    alt: 'Tokyo Skytree View', 
-    category: 'japan',
-    width: 1070,   // Add actual dimensions if known
-    height: 713   // Add actual dimensions if known
-  },
-  { 
-    id: 4, 
-    src: '/gallery-images/kyoto.jpeg',
-    alt: 'Me in Kyoto', 
-    category: 'japan',
-    width: 1070,   // Add actual dimensions if known
-    height: 713   // Add actual dimensions if known
-  },
-  { 
-    id: 5, 
-    src: '/gallery-images/osakawhale.jpeg',
-    alt: 'Whale Shark in Osaka Aquarium', 
-    category: 'japan',
-    width: 1070,   // Add actual dimensions if known
-    height: 713   // Add actual dimensions if known
-  },
-  { 
-    id: 6, 
-    src: '/gallery-images/cherry.jpeg',
-    alt: 'Pink Flowers in Fukuoka', 
-    category: 'japan',
-    width: 1070,   // Add actual dimensions if known
-    height: 713   // Add actual dimensions if known
-  },
-  { 
-    id: 7, 
+  {
+    id: 2,
     src: '/gallery-images/wedding1.jpeg',
-    alt: "Leon x Linda's Wedding", 
+    alt: "Leon x Linda's Wedding",
     category: 'Wedding',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
-  { 
-    id: 8, 
+  {
+    id: 3,
+    src: '/gallery-images/naganomonkey.png',
+    alt: 'Nagano Monkeys',
+    category: 'japan',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 4,
+    src: '/gallery-images/tokyoview.jpeg',
+    alt: 'Tokyo Skytree View',
+    category: 'japan',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 5,
+    src: '/gallery-images/kyoto.jpeg',
+    alt: 'Me in Kyoto',
+    category: 'japan',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 6,
+    src: '/gallery-images/osakawhale.jpeg',
+    alt: 'Whale Shark in Osaka Aquarium',
+    category: 'japan',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 7,
+    src: '/gallery-images/cherry.jpeg',
+    alt: 'Pink Flowers in Fukuoka',
+    category: 'japan',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  
+  {
+    id: 8,
     src: '/gallery-images/mumanddad.jpeg',
-    alt: "Wedding Guests", 
+    alt: "Wedding Guests",
     category: 'Wedding',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
-  { 
-    id: 9, 
+  {
+    id: 9,
     src: '/gallery-images/onetreehill.jpeg',
-    alt: "Walking Off Into the Distance", 
+    alt: "Walking Off Into the Distance",
     category: 'Wedding',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
-  { 
-    id: 10, 
+  {
+    id: 10,
     src: '/gallery-images/signing.jpeg',
-    alt: "Signing the Marriage License", 
+    alt: "Signing the Marriage License",
     category: 'Wedding',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
-  
-  { 
-    id: 11, 
+
+  {
+    id: 11,
     src: '/gallery-images/bridalparty.jpeg',
-    alt: "Friends & Family", 
+    alt: "Friends & Family",
     category: 'Wedding',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
-  { 
-    id: 12, 
+  {
+    id: 12,
     src: '/gallery-images/embrace.jpeg',
-    alt: "Embrace", 
+    alt: "Embrace",
     category: 'Wedding',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
 
-  
-];
 
+];
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeCategory, setActiveCategory] = useState('all'); // Default to 'all'
 
   const filteredImages = activeCategory === 'all' 
     ? galleryImages 
-    : galleryImages.filter(img => img.category === activeCategory);
+    : galleryImages.filter(img => img.category.toLowerCase() === activeCategory.toLowerCase());
 
   return (
     <Layout pageTitle="Gallery">
@@ -227,32 +227,31 @@ export default function Gallery() {
 
         {/* Gallery Content Below */}
         <div className="w-full max-w-6xl px-4">
-          {/* Category Filters */}
-          <div className="flex justify-center gap-4 mb-8">
-            {['all', 'japan', 'Wedding', 'Event'].map((category) => (
+          {/* Centered Category Filters */}
+          <div className="flex justify-center space-x-4 mb-8">
+            {['all', 'Japan', 'Wedding', 'Event'].map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-4 py-2 rounded-full capitalize ${
-                  activeCategory === category
-                    ? 'bg-white text-[#0A2ECE]'
-                    : 'bg-[#0A2ECE] text-white border border-white'
+                className={`px-4 py-2 rounded-full border border-white transition-all ${
+                  activeCategory.toLowerCase() === category.toLowerCase()
+                    ? 'bg-white/20 text-white' // Active state
+                    : 'bg-transparent text-white/70 hover:bg-white/10' // Inactive state
                 }`}
               >
-                {category}
+                {category === 'all' ? 'All' : category}
               </button>
             ))}
           </div>
 
-          {/* Image Grid - Fixed with proper image handling */}
+
+          {/* Image Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {filteredImages.map((image) => (
-              <div 
-                key={image.id} 
+              <div
+                key={image.id}
                 className="relative aspect-square overflow-hidden rounded-lg cursor-pointer group bg-[#0A2ECE]"
-                style={{ 
-                  aspectRatio: '1070/713' // Use your exact aspect ratio
-                }}
+                style={{ aspectRatio: '1070/713' }}
                 onClick={() => setSelectedImage(image)}
               >
                 <Image
@@ -262,7 +261,7 @@ export default function Gallery() {
                   height={713}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  unoptimized={true} // Important for PNGs in some cases
+                  unoptimized={true}
                   placeholder="empty"
                   onError={(e) => {
                     console.error('Image failed to load:', image.src);
@@ -280,7 +279,7 @@ export default function Gallery() {
         </div>
       </div>
 
-      {/* Image Modal - Fixed with better error handling */}
+      {/* Image Modal */}
       {selectedImage && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}>
@@ -300,7 +299,7 @@ export default function Gallery() {
             <div className="absolute bottom-4 left-0 right-0 text-center text-white">
               {selectedImage.alt}
             </div>
-            <button 
+            <button
               className="absolute top-4 right-4 bg-white text-black rounded-full w-10 h-10 flex items-center justify-center"
               onClick={(e) => {
                 e.stopPropagation();
