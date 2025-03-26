@@ -258,7 +258,7 @@ const galleryImages = [
   {
     id: 20,
     src: '/extra-images/pizza.jpg',
-    alt: 'Pizza',
+    alt: 'Pizza!', // Just checking if this works
     category: 'WDCC',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
