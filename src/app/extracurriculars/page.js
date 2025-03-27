@@ -4,13 +4,26 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Layout from '../layout';
-import { motion } from 'framer-motion';
 
-// Simple text component without ripple effect
-const SimpleText = ({ text, className = "" }) => {
+// Enhanced responsive text component
+const ResponsiveText = ({ text, className = "", isMain = false }) => {
   return (
-    <h1 className={`text-6xl font-extrabold text-white mb-4 ${className}`}>
-      {text}
+    <h1 className={`
+      ${isMain ? 'text-4xl md:text-6xl' : 'text-3xl md:text-4xl'} 
+      font-extrabold text-white mb-4 
+      ${className}
+      transition-all duration-300
+      hover:scale-[1.02] hover:translate-y-[-2px]
+    `}>
+      {text.split('').map((char, i) => (
+        <span 
+          key={i} 
+          className="inline-block hover:translate-y-[-3px] transition-transform duration-200"
+          style={{ transitionDelay: `${i * 20}ms` }}
+        >
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
     </h1>
   );
 };
@@ -184,12 +197,8 @@ const galleryImages = [
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
-  
-  
-  
-
-
 ];
+
 export default function Extracurriculars() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [activeCategory, setActiveCategory] = useState('all');
@@ -200,11 +209,11 @@ export default function Extracurriculars() {
   
     return (
       <Layout pageTitle="Extracurriculars">
-        {/* Hero Section with Simple Text */}
-        <div className="flex flex-col items-center justify-center pt-20 pb-12">
-          <div className="text-center mb-12 w-full">
-            <SimpleText text="JOSHUA LI's" />
-            <SimpleText
+        {/* Hero Section with Responsive Text */}
+        <div className="flex flex-col items-center justify-center pt-16 md:pt-20 pb-8 md:pb-12">
+          <div className="text-center mb-8 md:mb-12 w-full px-4">
+            <ResponsiveText text="JOSHUA LI's" isMain />
+            <ResponsiveText
               text="Extracurriculars"
               className="italic font-bold"
               style={{ fontFamily: "'Crimson Text', serif" }}
@@ -214,12 +223,12 @@ export default function Extracurriculars() {
           {/* Gallery Content Below */}
           <div className="w-full max-w-6xl px-4">
             {/* Centered Category Filters */}
-            <div className="flex justify-center space-x-4 mb-8">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-6 md:mb-8">
               {['all', 'UOACS', 'Velocity', 'WDCC'].map((category) => (
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
-                  className={`px-4 py-2 rounded-full border border-white transition-all ${
+                  className={`px-3 py-1 md:px-4 md:py-2 text-sm md:text-base rounded-full border border-white transition-all ${
                     activeCategory.toLowerCase() === category.toLowerCase()
                       ? 'bg-white/20 text-white'
                       : 'bg-transparent text-white/70 hover:bg-white/10'
@@ -231,7 +240,7 @@ export default function Extracurriculars() {
             </div>
   
             {/* Image Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {filteredImages.map((image) => (
                 <div
                   key={image.id}
@@ -253,8 +262,8 @@ export default function Extracurriculars() {
                       e.target.style.display = 'none';
                     }}
                   />
-                  <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-end p-4">
-                    <p className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-end p-3 md:p-4">
+                    <p className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs md:text-sm">
                       {image.alt}
                     </p>
                   </div>
