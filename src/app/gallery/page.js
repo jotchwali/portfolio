@@ -231,7 +231,6 @@ export default function Gallery() {
 
   return (
     <Layout pageTitle="Gallery">
-      {/* Hero Section with Simple Text */}
       <div className="flex flex-col items-center justify-center pt-20 pb-12">
         <div className="text-center mb-12 w-full">
           <SimpleText text="JOSHUA LI's" />
@@ -242,15 +241,14 @@ export default function Gallery() {
           />
         </div>
 
-        {/* Rest of your gallery code remains exactly the same */}
         <div className="w-full max-w-6xl px-4">
-          {/* Centered Category Filters */}
-          <div className="flex justify-center space-x-4 mb-8">
+          {/* Improved Category Filters for Mobile */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8 px-2">
             {['all', 'Nagano', 'Tokyo', 'Osaka / Kyoto', 'Fukuoka', 'Wedding'].map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-4 py-2 rounded-full border border-white transition-all ${
+                className={`px-3 py-1.5 text-sm md:px-4 md:py-2 md:text-base rounded-full border border-white transition-all whitespace-nowrap ${
                   activeCategory.toLowerCase() === category.toLowerCase()
                     ? 'bg-white/20 text-white'
                     : 'bg-transparent text-white/70 hover:bg-white/10'
@@ -262,7 +260,7 @@ export default function Gallery() {
           </div>
 
           {/* Image Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {filteredImages.map((image) => (
               <div
                 key={image.id}
@@ -285,7 +283,7 @@ export default function Gallery() {
                   }}
                 />
                 <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-end p-4">
-                  <p className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <p className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm sm:text-base">
                     {image.alt}
                   </p>
                 </div>
@@ -295,7 +293,7 @@ export default function Gallery() {
         </div>
       </div>
 
-      {/* Image Modal - keep this exactly the same */}
+      {/* Image Modal */}
       {selectedImage && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}>
