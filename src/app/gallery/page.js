@@ -7,107 +7,20 @@ import Layout from '../layout';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 
-
-const RippleText = ({ text, className = "" }) => {
-  const ref = useRef(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  // Smooth spring values for natural movement
-  const springX = useSpring(mouseX, { damping: 30, stiffness: 1000 });
-  const springY = useSpring(mouseY, { damping: 30, stiffness: 300 });
-
-  // Transform functions for the ripple effect
-  const rippleStrength = 0.5;
-  const rippleScale = useTransform(
-    springX,
-    [-100, 0, 100],
-    [1 - rippleStrength, 1, 1 - rippleStrength]
-  );
-
-  const rippleSkewX = useTransform(
-    springY,
-    [-100, 0, 100],
-    [-rippleStrength, 0, rippleStrength]
-  );
-
-  const rippleSkewY = useTransform(
-    springX,
-    [-100, 0, 100],
-    [rippleStrength, 0, -rippleStrength]
-  );
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!ref.current) return;
-
-      const rect = ref.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      // Calculate distance from center with damping
-      const distanceX = (e.clientX - centerX) * 0.1;
-      const distanceY = (e.clientY - centerY) * 0.1;
-
-      mouseX.set(distanceX);
-      mouseY.set(distanceY);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
-
+const SimpleText = ({ text, className = "" }) => {
   return (
-    <div className="block w-full">
-      <motion.h1
-        ref={ref}
-        className={`text-6xl font-extrabold text-white mb-4 ${className}`}
-        style={{
-          display: 'block',
-          transformOrigin: 'center center',
-          scale: rippleScale,
-          skewX: rippleSkewX,
-          skewY: rippleSkewY,
-          transition: 'all 0.5s cubic-bezier(0.17, 0.55, 0.55, 1)',
-        }}
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        whileHover={{
-          scale: 1.02,
-          transition: { duration: 0.3 }
-        }}
-      >
-        {text.split('').map((char, i) => (
-          <motion.span
-            key={i}
-            style={{
-              display: 'inline-block',
-              transformOrigin: 'center bottom',
-            }}
-            animate={{
-              y: [0, -2, 0],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.05
-            }}
-          >
-            {char === ' ' ? '\u00A0' : char}
-          </motion.span>
-        ))}
-      </motion.h1>
-    </div>
+    <h1 className={`text-6xl font-extrabold text-white mb-4 ${className}`}>
+      {text}
+    </h1>
   );
 };
+
 const galleryImages = [
   {
     id: 1,
     src: '/gallery-images/teamlabs.png',
     alt: 'Team Labs Japan',
-    category: 'japan',
+    category: 'Tokyo',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -123,7 +36,7 @@ const galleryImages = [
     id: 3,
     src: '/gallery-images/naganomonkey.png',
     alt: 'Nagano Monkeys',
-    category: 'japan',
+    category: 'Nagano',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -131,7 +44,7 @@ const galleryImages = [
     id: 4,
     src: '/gallery-images/tokyoview.jpeg',
     alt: 'Tokyo Skytree View',
-    category: 'japan',
+    category: 'Tokyo',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -139,7 +52,7 @@ const galleryImages = [
     id: 5,
     src: '/gallery-images/kyoto.jpeg',
     alt: 'Me in Kyoto',
-    category: 'japan',
+    category: 'Osaka / Kyoto',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -147,7 +60,7 @@ const galleryImages = [
     id: 6,
     src: '/gallery-images/osakawhale.jpeg',
     alt: 'Whale Shark in Osaka Aquarium',
-    category: 'japan',
+    category: 'Osaka / Kyoto',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -155,7 +68,7 @@ const galleryImages = [
     id: 7,
     src: '/gallery-images/cherry.jpeg',
     alt: 'Pink Flowers in Fukuoka',
-    category: 'japan',
+    category: 'Fukuoka',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -201,12 +114,116 @@ const galleryImages = [
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
-
+  {
+    id: 13,
+    src: '/gallery-images/tokyotrees.jpeg',
+    alt: "Tokyo's Trees",
+    category: 'Tokyo',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 14,
+    src: '/gallery-images/nagano-snow.jpeg',
+    alt: "Snowy Hills",
+    category: 'Nagano',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 15,
+    src: '/gallery-images/kyotopond.jpeg',
+    alt: "Kyoto Pond",
+    category: 'Osasa / Kyoto',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 16,
+    src: '/gallery-images/nara-temple-gate.jpeg',
+    alt: "Nara Temple Gate",
+    category: 'Osasa / Kyoto',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 17,
+    src: '/gallery-images/deer.jpeg',
+    alt: "Nara's Famous Deer",
+    category: 'Osasa / Kyoto',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 18,
+    src: '/gallery-images/anothermmountain.jpeg',
+    alt: "More Snowy Hills",
+    category: 'Nagano',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 19,
+    src: '/gallery-images/kyotothing.jpeg',
+    alt: "Kiyomizu-dera",
+    category: 'Osaka / Kyoto',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 20,
+    src: '/gallery-images/train.jpeg',
+    alt: "Train",
+    category: 'Tokyo',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 21,
+    src: '/gallery-images/Kiyomizu-dera.jpeg',
+    alt: "Kiyomizu-dera",
+    category: 'Osaka / Kyoto',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 22,
+    src: '/gallery-images/train-seats.jpeg',
+    alt: "Train Seats",
+    category: 'Nagano',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 23,
+    src: '/gallery-images/tokyoriver.jpeg',
+    alt: "River near Tokyo Skytree",
+    category: 'Tokyo',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 24,
+    src: '/gallery-images/viewinkyoto.jpeg',
+    alt: "Sun Rays in Kyoto",
+    category: 'Osaka / Kyoto',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 25,
+    src: '/gallery-images/forest-fukuoka.jpeg',
+    alt: "Trees in Fukuoka",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
 
 ];
+
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('all'); // Default to 'all'
+  const [activeCategory, setActiveCategory] = useState('all');
 
   const filteredImages = activeCategory === 'all' 
     ? galleryImages 
@@ -214,36 +231,35 @@ export default function Gallery() {
 
   return (
     <Layout pageTitle="Gallery">
-      {/* Hero Section with Ripple Text */}
+      {/* Hero Section with Simple Text */}
       <div className="flex flex-col items-center justify-center pt-20 pb-12">
         <div className="text-center mb-12 w-full">
-          <RippleText text="JOSHUA LI's" />
-          <RippleText
+          <SimpleText text="JOSHUA LI's" />
+          <SimpleText
             text="Gallery"
             className="italic font-bold"
             style={{ fontFamily: "'Crimson Text', serif" }}
           />
         </div>
 
-        {/* Gallery Content Below */}
+        {/* Rest of your gallery code remains exactly the same */}
         <div className="w-full max-w-6xl px-4">
           {/* Centered Category Filters */}
           <div className="flex justify-center space-x-4 mb-8">
-            {['all', 'Japan', 'Wedding', 'Event'].map((category) => (
+            {['all', 'Nagano', 'Tokyo', 'Osaka / Kyoto', 'Fukuoka', 'Wedding'].map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 className={`px-4 py-2 rounded-full border border-white transition-all ${
                   activeCategory.toLowerCase() === category.toLowerCase()
-                    ? 'bg-white/20 text-white' // Active state
-                    : 'bg-transparent text-white/70 hover:bg-white/10' // Inactive state
+                    ? 'bg-white/20 text-white'
+                    : 'bg-transparent text-white/70 hover:bg-white/10'
                 }`}
               >
                 {category === 'all' ? 'All' : category}
               </button>
             ))}
           </div>
-
 
           {/* Image Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -279,7 +295,7 @@ export default function Gallery() {
         </div>
       </div>
 
-      {/* Image Modal */}
+      {/* Image Modal - keep this exactly the same */}
       {selectedImage && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}>

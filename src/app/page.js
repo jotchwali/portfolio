@@ -2,101 +2,14 @@
 'use client';
 
 import React from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 
-const RippleText = ({ text, className = "" }) => {
-  const ref = useRef(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  // Smooth spring values for natural movement
-  const springX = useSpring(mouseX, { damping: 30, stiffness: 1000 });
-  const springY = useSpring(mouseY, { damping: 30, stiffness: 300 });
-
-  // Transform functions for the ripple effect
-  const rippleStrength = 0.5;
-  const rippleScale = useTransform(
-    springX,
-    [-100, 0, 100],
-    [1 - rippleStrength, 1, 1 - rippleStrength]
-  );
-
-  const rippleSkewX = useTransform(
-    springY,
-    [-100, 0, 100],
-    [-rippleStrength, 0, rippleStrength]
-  );
-
-  const rippleSkewY = useTransform(
-    springX,
-    [-100, 0, 100],
-    [rippleStrength, 0, -rippleStrength]
-  );
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (!ref.current) return;
-
-      const rect = ref.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      // Calculate distance from center with damping
-      const distanceX = (e.clientX - centerX) * 0.1;
-      const distanceY = (e.clientY - centerY) * 0.1;
-
-      mouseX.set(distanceX);
-      mouseY.set(distanceY);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
-
+// Simple text component without ripple effect
+const SimpleText = ({ text, className = "" }) => {
   return (
-    <div className="block w-full">
-      <motion.h1
-        ref={ref}
-        className={`text-6xl font-extrabold text-white mb-4 ${className}`}
-        style={{
-          display: 'block',
-          transformOrigin: 'center center',
-          scale: rippleScale,
-          skewX: rippleSkewX,
-          skewY: rippleSkewY,
-          transition: 'all 0.5s cubic-bezier(0.17, 0.55, 0.55, 1)',
-        }}
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-        whileHover={{
-          scale: 1.02,
-          transition: { duration: 0.3 }
-        }}
-      >
-        {text.split('').map((char, i) => (
-          <motion.span
-            key={i}
-            style={{
-              display: 'inline-block',
-              transformOrigin: 'center bottom',
-            }}
-            animate={{
-              y: [0, -2, 0],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: i * 0.05
-            }}
-          >
-            {char === ' ' ? '\u00A0' : char}
-          </motion.span>
-        ))}
-      </motion.h1>
-    </div>
+    <h1 className={`text-6xl font-extrabold text-white mb-4 ${className}`}>
+      {text}
+    </h1>
   );
 };
 
@@ -109,7 +22,7 @@ const ExperienceItem = ({ title, children }) => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-between w-full text-left"
       >
-        <h3 className="text-xl font-semibold">{title}</h3>
+        <h3 className="text-xl font-medium">{title}</h3>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
@@ -142,8 +55,8 @@ export default function Home() {
     <>
       <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)]">
         <div className="text-center mb-32 w-full">
-          <RippleText text="JOSHUA LI's" />
-          <RippleText
+          <SimpleText text="JOSHUA LI's" />
+          <SimpleText
             text="Portfolio"
             className="italic font-bold"
             style={{ fontFamily: "'Crimson Text', serif" }}
@@ -227,14 +140,14 @@ export default function Home() {
                 </ExperienceItem>
               </div>
 
-              <h3 className='text-xl font-semibold mb-2'>Previously:</h3>
-              <h3 className='text-xl font-semibold mb-2'>Functional Analyst Intern at UOA</h3>
-              <h3 className='text-xl font-semibold mb-2'>Software Developer at WDCC (Passport)</h3>
-              <h3 className='text-xl font-semibold mb-2'>Piano Teacher</h3>
-              <h3 className='text-xl font-semibold mb-2'>Customer Service Representative at Briscoes Head Office</h3>
-              <h3 className='text-xl font-semibold mb-2'>Sales Assistant at Briscoes PC</h3>
-              <h3 className='text-xl font-semibold mb-2'>After School Care Helper at sKids</h3>
-              <h3 className='text-xl font-semibold mb-2'>Pharmacy Assistant at Chemist Warehouse</h3>
+              <h3 className='text-xl font-medium mb-2'>Previously:</h3>
+              <h3 className='text-xl font-medium mb-2'>Functional Analyst Intern at UOA</h3>
+              <h3 className='text-xl font-medium mb-2'>Software Developer at WDCC (Passport)</h3>
+              <h3 className='text-xl font-medium mb-2'>Piano Teacher</h3>
+              <h3 className='text-xl font-medium mb-2'>Customer Service Representative at Briscoes Head Office</h3>
+              <h3 className='text-xl font-medium mb-2'>Sales Assistant at Briscoes PC</h3>
+              <h3 className='text-xl font-medium mb-2'>After School Care Helper at sKids</h3>
+              <h3 className='text-xl font-medium mb-2'>Pharmacy Assistant at Chemist Warehouse</h3>
             </div>
           </div>
         </div>
