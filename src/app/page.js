@@ -13,6 +13,30 @@ const SimpleText = ({ text, className = "" }) => {
   );
 };
 
+
+// Enhanced responsive text component
+const ResponsiveText = ({ text, className = "", isMain = false }) => {
+  return (
+    <h1 className={`
+      ${isMain ? 'text-4xl md:text-6xl' : 'text-3xl md:text-4xl'} 
+      font-extrabold text-white mb-4 
+      ${className}
+      transition-all duration-300
+      hover:scale-[1.02] hover:translate-y-[-2px]
+    `}>
+      {text.split('').map((char, i) => (
+        <span 
+          key={i} 
+          className="inline-block hover:translate-y-[-3px] transition-transform duration-200"
+          style={{ transitionDelay: `${i * 20}ms` }}
+        >
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
+    </h1>
+  );
+};
+
 const ExperienceItem = ({ title, children }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -55,8 +79,8 @@ export default function Home() {
     <>
       <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)]">
         <div className="text-center mb-32 w-full">
-          <SimpleText text="JOSHUA LI's" />
-          <SimpleText
+          <ResponsiveText text="JOSHUA LI's" isMain />
+          <ResponsiveText
             text="Portfolio"
             className="italic font-bold"
             style={{ fontFamily: "'Crimson Text', serif" }}
