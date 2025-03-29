@@ -157,7 +157,7 @@ const galleryImages = [
     id: 15,
     src: '/gallery-images/kyotopond.jpeg',
     alt: "Kyoto Pond",
-    category: 'Osasa / Kyoto',
+    category: 'Osaka / Kyoto',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -241,6 +241,183 @@ const galleryImages = [
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
+  {
+    id: 26,
+    src: '/gallery-images/osaka-boat.JPG',
+    alt: "Boat outside of Osaka Aquarium",
+    category: 'Osaka / Kyoto',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 27,
+    src: '/gallery-images/akihabura.JPG',
+    alt: "Akihabura",
+    category: 'Tokyo',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 28,
+    src: '/gallery-images/denim-man.JPG',
+    alt: "Tokyo Flea Market",
+    category: 'Tokyo',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 29,
+    src: '/gallery-images/mount-nagano.JPG',
+    alt: "Mountain on the way to Nagano",
+    category: 'Nagano',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 30,
+    src: '/gallery-images/ueno.JPG',
+    alt: "River in Ueno",
+    category: 'Tokyo',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 31,
+    src: '/gallery-images/street-food.JPG',
+    alt: "Takoyaki",
+    category: 'Nagano',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 32,
+    src: '/gallery-images/dog.JPG',
+    alt: "Dog at Tokyo Muesuem",
+    category: 'Tokyo',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 33,
+    src: '/gallery-images/seal.JPG',
+    alt: "Seal",
+    category: 'Osaka / Kyoto',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 34,
+    src: '/gallery-images/ueno-2.JPG',
+    alt: "Ueno Temple",
+    category: 'Tokyo',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 35,
+    src: '/gallery-images/temple-t.JPG',
+    alt: "Temple in Tokyo",
+    category: 'Tokyo',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 36,
+    src: '/gallery-images/asakusa.JPG',
+    alt: "Sensoji Temple",
+    category: 'Tokyo',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 37,
+    src: '/gallery-images/bamboo.JPG',
+    alt: "Bamboo",
+    category: 'Osaka / Kyoto',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 38,
+    src: '/gallery-images/buddha.JPG',
+    alt: "Resting Buddha",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 39,
+    src: '/gallery-images/f1.JPG',
+    alt: "View in Fukuoka",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 40,
+    src: '/gallery-images/f3.JPG',
+    alt: "Before the Resting Buddha",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 41,
+    src: '/gallery-images/duckies.JPG',
+    alt: "Ducks",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 42,
+    src: '/gallery-images/kido.JPG',
+    alt: "Street Lights",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 43,
+    src: '/gallery-images/f2.JPG',
+    alt: "View in Fukuoka",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 44,
+    src: '/gallery-images/f4.JPG',
+    alt: "Ohori Park",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 45,
+    src: '/gallery-images/michellin.JPG',
+    alt: "Michellin Star Ramen",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 46,
+    src: '/gallery-images/f5.JPG',
+    alt: "Pretty Trees",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 47,
+    src: '/gallery-images/thebros.JPG',
+    alt: "The Bro's",
+    category: 'Fukuoka',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+
 
 ];
 

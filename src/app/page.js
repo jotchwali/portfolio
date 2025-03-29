@@ -103,7 +103,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-center bg-[#0A2ECE]">
         {/* About Section */}
         <div className='max-w-2xl mb-16'>
-          <h2 className='text-3xl font-bold mb-6'>about:</h2>
+          <h2 className='text-3xl font-bold mb-6 pt-3'>about:</h2>
           <div className='space-y-4 text-lg'>
             <p>Hi! My name is Josh, and welcome to my portfolio. I am in my final year of Computer Science and IT Management at the University of Auckland, on track to complete my studies by November 2025.</p>
             <p>During the week, I serve as the President of UOACS, an Outreach Executive at Velocity, a UX/UI Designer for WDCC, and a volunteer evangelist for MyUniClub.</p>
@@ -164,7 +164,7 @@ export default function Home() {
                 </ExperienceItem>
               </div>
 
-              <h3 className='text-xl font-medium mb-2'>Previously:</h3>
+              <h3 className='text-2xl font-semibold mb-2'>Previously:</h3>
               <h3 className='text-xl font-medium mb-2'>Functional Analyst Intern at UOA</h3>
               <h3 className='text-xl font-medium mb-2'>Software Developer at WDCC (Passport)</h3>
               <h3 className='text-xl font-medium mb-2'>Piano Teacher</h3>
