@@ -197,6 +197,14 @@ const galleryImages = [
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
+  {
+    id: 22,
+    src: '/extra-images/bbq.JPG',
+    alt: 'UOACS BBQ 2025',
+    category: 'UOACS',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
 ];
 
 export default function Extracurriculars() {
