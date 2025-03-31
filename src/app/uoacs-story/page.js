@@ -146,7 +146,7 @@ export default function UOACSStory() {
                 />
               </div>
               <div className="bg-white/10 p-3 text-center text-sm text-white/80">
-                The founding moment - October 17, 2023
+                The Founding Moment - October 17, 2023
               </div>
             </div>
 
