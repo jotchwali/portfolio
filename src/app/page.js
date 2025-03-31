@@ -134,7 +134,7 @@ export default function Home() {
               <h3 className='text-2xl font-semibold mb-2'>Currently:</h3>
               <ExperienceItem title="Founding President of UOACS (University of Auckland CompSci Society)">
                 <p>Halfway through my degree, I realized I should do a bit more at uni. I always had a thought in the back of my mind wondering why there wasn't a computer science society at the largest university in New Zealand. So... I created one.</p>
-                <p className='mt-4'>From no money, no team, no members, no formal recognition to over five figures in sponsorship revenue, 300+ paid members and an awesome team of 22 executives that help me run this club. It has been the most rewarding and stressful project of my life and I wouldn't change it for the world.</p>
+                <p className='mt-4'>From no money, no team, no members, no formal recognition to over five figures in sponsorship revenue, 450+ paid members and an awesome team of 22 executives that help me run this club. It has been the most rewarding and stressful project of my life and I wouldn't change it for the world.</p>
               </ExperienceItem>
             </div>
 
