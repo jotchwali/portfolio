@@ -1,5 +1,5 @@
-// src/app/layout.js
 'use client';
+// src/app/layout.js
 import { useState } from 'react';
 import Link from 'next/link';
 import './globals.css';
@@ -9,6 +9,8 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en" data-theme="dark">
+      {/* Removed Instagram embed script from here */}
+      
       <body className="bg-[#0A2ECE] min-h-screen text-white font-sans relative">
         {/* Header/Nav Bar */}
         <header className="fixed top-0 left-0 right-0 bg-[#0A2ECE] z-50 py-4 px-6 flex justify-between items-center border-b border-white/10">
@@ -91,8 +93,8 @@ export default function RootLayout({ children }) {
           </div>
         )}
 
-        {/* Main Content */}
-        <main className="pt-20 pb-12 bg-[#0A2ECE]">
+       {/* Main Content */}
+       <main className="pt-20 pb-12 bg-[#0A2ECE]">
           {children}
         </main>
       </body>

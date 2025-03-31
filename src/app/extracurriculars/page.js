@@ -4,6 +4,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Layout from '../layout';
+import Link from 'next/link';
+
 
 // Enhanced responsive text component
 const ResponsiveText = ({ text, className = "", isMain = false }) => {
@@ -55,8 +57,8 @@ const galleryImages = [
   },
   {
     id: 4,
-    src: '/extra-images/industry-panels.jpeg',
-    alt: 'Industry Night Panelists',
+    src: '/extra-images/pookie.jpeg',
+    alt: 'Jess and I',
     category: 'UOACS',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
@@ -95,8 +97,8 @@ const galleryImages = [
   },
   {
     id: 9,
-    src: '/extra-images/darren.jpeg',
-    alt: 'Darren at Launch Night',
+    src: '/extra-images/launch1.jpeg',
+    alt: 'Pre-Launch Night',
     category: 'UOACS',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
@@ -205,6 +207,22 @@ const galleryImages = [
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
+  {
+    id: 23,
+    src: '/extra-images/industry-panels.jpeg',
+    alt: 'Industry Night Panelists',
+    category: 'UOACS',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
+  {
+    id: 24,
+    src: '/extra-images/launch-all.jpeg',
+    alt: 'Launch Night Attendees',
+    category: 'UOACS',
+    width: 1070,   // Add actual dimensions if known
+    height: 713   // Add actual dimensions if known
+  },
 ];
 
 export default function Extracurriculars() {
@@ -218,14 +236,32 @@ export default function Extracurriculars() {
     return (
       <Layout pageTitle="Extracurriculars">
         {/* Hero Section with Responsive Text */}
-        <div className="flex flex-col items-center justify-center pt-16 md:pt-20 pb-8 md:pb-12">
-          <div className="text-center mb-8 md:mb-12 w-full px-4">
+        <div className="flex flex-col items-center justify-center -mt-8 md:-mt-12 pb-8 md:pb-12">
+        <div className="text-center mb-8 md:mb-12 w-full px-4">
             <ResponsiveText text="JOSHUA LI's" isMain />
             <ResponsiveText
               text="Extracurriculars"
               className="italic font-bold"
               style={{ fontFamily: "'Crimson Text', serif" }}
             />
+          </div>
+
+          {/* Landscape Banner Photo */}
+          <div className="w-full max-w-6xl px-4 mb-8">
+            <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-xl overflow-hidden">
+              <Image
+                src="/extra-images/bbq-banner.png" // Replace with your actual banner image path
+                alt="UOACS Banner"
+                fill
+                className="object-cover"
+                unoptimized={true}
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+                <Link href="/uoacs-story" className="text-white hover:underline">
+                  click here to learn more about uoacs's story
+                </Link>
+              </div>
+            </div>
           </div>
   
           {/* Gallery Content Below */}
