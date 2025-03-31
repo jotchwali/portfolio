@@ -247,22 +247,21 @@ export default function Extracurriculars() {
           </div>
 
           {/* Landscape Banner Photo */}
-          <div className="w-full max-w-6xl px-4 mb-8">
-            <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-xl overflow-hidden">
-              <Image
-                src="/extra-images/bbq-banner.png" // Replace with your actual banner image path
-                alt="UOACS Banner"
-                fill
-                className="object-cover"
-                unoptimized={true}
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                <Link href="/uoacs-story" className="text-white hover:underline">
-                  click here to learn more about uoacs's story
-                </Link>
-              </div>
-            </div>
-          </div>
+<div className="w-full max-w-6xl px-4 mb-8">
+  <Link href="/uoacs-story" className="block relative w-full h-64 md:h-80 lg:h-96 rounded-xl overflow-hidden">
+    <Image
+      src="/extra-images/bbq-banner.png" // Replace with your actual banner image path
+      alt="UOACS Banner"
+      fill
+      className="object-cover"
+      unoptimized={true}
+    />
+    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+      <span className="text-white hover:underline">click to learn more about uoacs's story</span>
+    </div>
+  </Link>
+</div>
+
   
           {/* Gallery Content Below */}
           <div className="w-full max-w-6xl px-4">
