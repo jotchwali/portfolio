@@ -190,7 +190,7 @@ export default function UOACSStory() {
                     />
                   </div>
                   <div className="bg-white/10 p-3 text-center text-sm text-white/80">
-                    Our First Meeting - February 11, 2024
+                    Our First Meeting Minutes- February 11, 2024
                   </div>
                 </div>
 
