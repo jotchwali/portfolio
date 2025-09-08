@@ -421,7 +421,7 @@ const galleryImages = [
     id: 48,
     src: '/gallery-images/colly.jpeg',
     alt: "Colessuem",
-    category: 'Rome',
+    category: 'Italy',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -429,7 +429,7 @@ const galleryImages = [
     id: 49,
     src: '/gallery-images/flag.jpeg',
     alt: "Flag",
-    category: 'Rome',
+    category: 'Italy',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -437,7 +437,7 @@ const galleryImages = [
     id: 50,
     src: '/gallery-images/petey.jpeg',
     alt: "St Peters",
-    category: 'Rome',
+    category: 'Italy',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },  
@@ -445,7 +445,7 @@ const galleryImages = [
     id: 51,
     src: '/gallery-images/outside.jpeg',
     alt: "Outside St Peters",
-    category: 'Rome',
+    category: 'Italy',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -453,7 +453,7 @@ const galleryImages = [
     id: 52,
     src: '/gallery-images/boat.jpeg',
     alt: "Boat",
-    category: 'Rome',
+    category: 'Italy',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -461,7 +461,7 @@ const galleryImages = [
     id: 53,
     src: '/gallery-images/pan.jpeg',
     alt: "Pantheon",
-    category: 'Rome',
+    category: 'Italy',
     width: 1070,   // Add actual dimensions if known
     height: 713   // Add actual dimensions if known
   },
@@ -494,7 +494,7 @@ export default function Gallery() {
         <div className="w-full max-w-6xl px-4">
           {/* Improved Category Filters for Mobile */}
           <div className="flex flex-wrap justify-center gap-2 mb-8 px-2">
-            {['all', 'Nagano', 'Tokyo', 'Osaka / Kyoto', 'Fukuoka', 'Wedding', 'Rome', 'Florence', 'Dolomites'].map((category) => (
+            {['all', 'Nagano', 'Tokyo', 'Osaka / Kyoto', 'Fukuoka', 'Wedding', 'Italy'].map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
