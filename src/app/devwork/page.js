@@ -40,6 +40,14 @@ function TiltCard({ children, className, style, ...props }) {
 
 const projects = [
   {
+    title: 'Jutsu',
+    description: ' Real-time hand gesture recognition that triggers sounds and visual effects, powered by MediaPipe and running entirely in the browser.',
+    tech: [' Next.js 16', 'MediaPipe Tasks Vision', 'Web Audio API', 'Tailwind CSS', 'TypeScript'],
+    year: '2026',
+    liveLink: 'https://computer-vision-git-main-jotchwalis-projects.vercel.app/', 
+    image: '/jutsu.jpeg', 
+  },
+  {
     title: 'ACEC Website',
     description: 'Full stack website for ACEC with event management, member portal, and gallery.',
     tech: ['Next.js', 'Google API', 'React', 'Tailwind CSS', 'Vercel'],
