@@ -22,41 +22,67 @@ const FadeIn = ({ children, delay = 0 }) => {
   );
 };
 
-// ─── Timeline item ───
+// ─── Word-by-word reveal on scroll ───
+const WordReveal = ({ text, className, style, delay = 0 }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const words = text.split(' ');
+
+  return (
+    <p ref={ref} className={className} style={style}>
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0, y: 10 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{
+            duration: 0.4,
+            delay: delay + i * 0.03,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+          style={{ display: 'inline-block', marginRight: '0.3em' }}
+        >
+          {word}
+        </motion.span>
+      ))}
+    </p>
+  );
+};
+
+// ─── Desktop timeline item (alternating left/right) ───
 const TimelineItem = ({ year, title, organization, description, side = 'left', isLast = false }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-50px' });
 
+  const content = (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: side === 'left' ? -20 : 20 }}
+      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+    >
+      <p className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
+        {year}
+      </p>
+      <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+        {title}
+      </h3>
+      <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+        {organization}
+      </p>
+      {description && (
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
+          {description}
+        </p>
+      )}
+    </motion.div>
+  );
+
   return (
-    <div className="relative grid grid-cols-[1fr_auto_1fr] gap-4 md:gap-8">
+    <div className="relative grid grid-cols-[1fr_auto_1fr] gap-8">
       {/* Left content */}
-      <div className={`${side === 'left' ? 'text-right' : ''} py-6 ${side === 'right' ? 'hidden md:block' : ''}`}>
-        {side === 'left' && (
-          <motion.div
-            ref={ref}
-            initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            <p className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
-              {year}
-            </p>
-            <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-              {title}
-            </h3>
-            <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
-              {organization}
-            </p>
-            {description && (
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-                {description}
-              </p>
-            )}
-          </motion.div>
-        )}
-        {side === 'right' && (
-          <div className="hidden md:block" />
-        )}
+      <div className={`py-6 ${side === 'left' ? 'text-right' : ''}`}>
+        {side === 'left' ? content : null}
       </div>
 
       {/* Center line + dot */}
@@ -74,103 +100,25 @@ const TimelineItem = ({ year, title, organization, description, side = 'left', i
       </div>
 
       {/* Right content */}
-      <div className={`py-6 ${side === 'left' ? 'hidden md:block' : ''}`}>
-        {side === 'right' && (
-          <motion.div
-            ref={ref}
-            initial={{ opacity: 0, x: 20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            <p className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
-              {year}
-            </p>
-            <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-              {title}
-            </h3>
-            <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
-              {organization}
-            </p>
-            {description && (
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-                {description}
-              </p>
-            )}
-          </motion.div>
-        )}
-        {side === 'left' && (
-          <div className="hidden md:block" />
-        )}
+      <div className="py-6">
+        {side === 'right' ? content : null}
       </div>
-
-      {/* Mobile: show content on the right side regardless */}
-      {side === 'left' && (
-        <div className="md:hidden col-start-3 row-start-1 py-6">
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            <p className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
-              {year}
-            </p>
-            <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-              {title}
-            </h3>
-            <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
-              {organization}
-            </p>
-            {description && (
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-                {description}
-              </p>
-            )}
-          </motion.div>
-        </div>
-      )}
-      {side === 'right' && (
-        <div className="md:hidden col-start-3 row-start-1 py-6">
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            <p className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
-              {year}
-            </p>
-            <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-              {title}
-            </h3>
-            <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
-              {organization}
-            </p>
-            {description && (
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
-                {description}
-              </p>
-            )}
-          </motion.div>
-        </div>
-      )}
     </div>
   );
 };
 
 // ─── Mobile timeline (simpler, always right-aligned) ───
-const MobileTimelineItem = ({ year, title, organization, description, isLast = false }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
-
+const MobileTimelineItem = ({ year, title, organization, description, isLast = false, index = 0 }) => {
   return (
     <div className="relative flex gap-4">
       {/* Line + dot */}
       <div className="flex flex-col items-center">
         <motion.div
-          ref={ref}
           initial={{ scale: 0 }}
-          animate={isInView ? { scale: 1 } : {}}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true, margin: '-20px' }}
           transition={{ duration: 0.3, delay: 0.1 }}
-          className="w-2 h-2 rounded-full shrink-0 mt-2"
+          className="w-2.5 h-2.5 rounded-full shrink-0 mt-1.5"
           style={{ background: 'var(--gradient-primary)' }}
         />
         {!isLast && (
@@ -181,9 +129,10 @@ const MobileTimelineItem = ({ year, title, organization, description, isLast = f
       {/* Content */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
-        animate={isInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-        className="pb-8"
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-20px' }}
+        transition={{ duration: 0.5, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
+        className="pb-6 min-w-0"
       >
         <p className="text-xs font-medium tracking-widest uppercase mb-1" style={{ color: 'var(--text-tertiary)' }}>
           {year}
@@ -316,15 +265,28 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          <motion.h1
+          <h1
             className="text-5xl md:text-7xl font-bold tracking-tight mb-4"
             style={{ letterSpacing: '-0.04em' }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <span className="gradient-text">Joshua Li</span>
-          </motion.h1>
+            <span className="gradient-text" style={{ display: 'inline-flex' }}>
+              {'Joshua Li'.split('').map((char, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.2 + i * 0.06,
+                    ease: [0.25, 0.1, 0.25, 1],
+                  }}
+                  style={{ display: 'inline-block', whiteSpace: char === ' ' ? 'pre' : 'normal' }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </span>
+          </h1>
           <motion.p
             className="text-lg md:text-xl max-w-md mx-auto"
             style={{ color: 'var(--text-secondary)' }}
@@ -378,24 +340,36 @@ export default function Home() {
             </p>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <p className="text-lg md:text-xl leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-              Hi, I'm Josh. I graduated from the University of Auckland in November 2025 with a BSc in Computer Science and IT Management, and I now work full-time as a Solutions Engineer at Partly.
-            </p>
+            <WordReveal
+              text="Hi, I'm Josh. I graduated from the University of Auckland in November 2025 with a BSc in Computer Science and IT Management, and I now work full-time as a Solutions Engineer at Partly."
+              className="text-lg md:text-xl leading-relaxed mb-6"
+              style={{ color: 'var(--text-secondary)' }}
+              delay={0}
+            />
           </FadeIn>
           <FadeIn delay={0.2}>
-            <p className="text-lg md:text-xl leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-              Outside of work, I serve as a Senior Advisor for UOACS, the computer science society I founded at the University of Auckland. I also build websites and apps.
-            </p>
+            <WordReveal
+              text="Outside of work, I serve as a Senior Advisor for UOACS, the computer science society I founded at the University of Auckland. I also build websites and apps."
+              className="text-lg md:text-xl leading-relaxed mb-6"
+              style={{ color: 'var(--text-secondary)' }}
+              delay={0}
+            />
           </FadeIn>
           <FadeIn delay={0.3}>
-            <p className="text-lg md:text-xl leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-              On weekends, I busk at the Takapuna markets and play piano and lead music for my church's band.
-            </p>
+            <WordReveal
+              text="On weekends, I busk at the Takapuna markets and play piano and lead music for my church's band."
+              className="text-lg md:text-xl leading-relaxed mb-6"
+              style={{ color: 'var(--text-secondary)' }}
+              delay={0}
+            />
           </FadeIn>
           <FadeIn delay={0.4}>
-            <p className="text-lg md:text-xl leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              In my free time, I watch the Lakers dominate and play a pretty poor Galio in the mid lane. Oh, and I love to eat.
-            </p>
+            <WordReveal
+              text="In my free time, I watch the Lakers dominate and play a pretty poor Galio in the mid lane. Oh, and I love to eat."
+              className="text-lg md:text-xl leading-relaxed"
+              style={{ color: 'var(--text-secondary)' }}
+              delay={0}
+            />
           </FadeIn>
         </div>
       </section>

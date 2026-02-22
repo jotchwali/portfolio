@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import './globals.css';
 
 // ─── Custom cursor with CSS trail ───
@@ -86,10 +88,43 @@ function CustomCursor() {
   );
 }
 
+// ─── Magnetic hover link (desktop only) ───
+function MagneticLink({ href, children, className, style }) {
+  const ref = useRef(null);
+
+  const handleMouseMove = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    el.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px)`;
+  };
+
+  const handleMouseLeave = () => {
+    const el = ref.current;
+    if (el) el.style.transform = 'translate(0, 0)';
+  };
+
+  return (
+    <Link
+      ref={ref}
+      href={href}
+      className={className}
+      style={{ ...style, transition: 'transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.2s ease', willChange: 'transform' }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {children}
+    </Link>
+  );
+}
+
 export default function RootLayout({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     // Check for saved preference; default to dark
@@ -150,7 +185,7 @@ export default function RootLayout({ children }) {
             {/* Logo / Home */}
             <Link
               href="/"
-              className="text-sm font-medium tracking-tight"
+              className="text-sm font-medium tracking-tight nav-logo"
               style={{ color: 'var(--text-primary)' }}
             >
               Joshua Li
@@ -159,14 +194,14 @@ export default function RootLayout({ children }) {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
-                <Link
+                <MagneticLink
                   key={link.href}
                   href={link.href}
                   className="text-sm transition-opacity hover:opacity-60"
                   style={{ color: 'var(--text-secondary)' }}
                 >
                   {link.label}
-                </Link>
+                </MagneticLink>
               ))}
 
               {/* Dark Mode Toggle */}
@@ -254,7 +289,17 @@ export default function RootLayout({ children }) {
 
         {/* Main Content */}
         <main className="pt-16">
-          {children}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </main>
 
         {/* Footer */}
@@ -266,9 +311,14 @@ export default function RootLayout({ children }) {
           }}
         >
           <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
-              Joshua Li
-            </p>
+            <div className="flex flex-col items-center md:items-start gap-1">
+              <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                Joshua Li
+              </p>
+              <p className="text-xs" style={{ color: 'var(--text-tertiary)', opacity: 0.6 }}>
+                Last Edited: 22/02/2026 4:02 PM
+              </p>
+            </div>
             <div className="flex items-center gap-6">
               <a
                 href="https://www.linkedin.com/in/joshua-li-uoa"

@@ -1,7 +1,7 @@
 // src/app/contactme/page.js
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useCallback } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 const FadeIn = ({ children, delay = 0 }) => {
@@ -19,6 +19,37 @@ const FadeIn = ({ children, delay = 0 }) => {
     </motion.div>
   );
 };
+
+// ─── 3D tilt card wrapper ───
+function TiltCard({ children, className }) {
+  const ref = useRef(null);
+
+  const handleMouseMove = useCallback((e) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    el.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale3d(1.02, 1.02, 1.02)`;
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    const el = ref.current;
+    if (el) el.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)';
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{ transition: 'transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)', willChange: 'transform' }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {children}
+    </div>
+  );
+}
 
 const links = [
   {
@@ -93,41 +124,43 @@ export default function Contact() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {links.map((link, index) => (
             <FadeIn key={link.label} delay={index * 0.08}>
-              <a
-                href={link.href}
-                target={link.href.startsWith('mailto') ? undefined : '_blank'}
-                rel={link.href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
-                className="group block rounded-2xl p-6 border transition-all duration-200 h-full gradient-border"
-                style={{
-                  backgroundColor: 'var(--card-bg)',
-                  borderColor: 'var(--border-light)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--card-hover)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--card-bg)';
-                }}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div style={{ color: 'var(--text-primary)' }}>
-                    {link.icon}
+              <TiltCard>
+                <a
+                  href={link.href}
+                  target={link.href.startsWith('mailto') ? undefined : '_blank'}
+                  rel={link.href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
+                  className="group block rounded-2xl p-6 border transition-all duration-200 h-full gradient-border"
+                  style={{
+                    backgroundColor: 'var(--card-bg)',
+                    borderColor: 'var(--border-light)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--card-hover)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--card-bg)';
+                  }}
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div style={{ color: 'var(--text-primary)' }}>
+                      {link.icon}
+                    </div>
+                    <svg
+                      width="14" height="14" viewBox="0 0 14 14" fill="none"
+                      stroke="var(--text-tertiary)" strokeWidth="1.5"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mt-1"
+                    >
+                      <path d="M4 10l6-6M4.5 4H10v5.5" />
+                    </svg>
                   </div>
-                  <svg
-                    width="14" height="14" viewBox="0 0 14 14" fill="none"
-                    stroke="var(--text-tertiary)" strokeWidth="1.5"
-                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mt-1"
-                  >
-                    <path d="M4 10l6-6M4.5 4H10v5.5" />
-                  </svg>
-                </div>
-                <h3 className="text-base font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-                  {link.label}
-                </h3>
-                <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                  {link.description}
-                </p>
-              </a>
+                  <h3 className="text-base font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                    {link.label}
+                  </h3>
+                  <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                    {link.description}
+                  </p>
+                </a>
+              </TiltCard>
             </FadeIn>
           ))}
         </div>

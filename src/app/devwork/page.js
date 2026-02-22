@@ -1,10 +1,42 @@
 // src/app/devwork/page.js
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// ─── 3D tilt card wrapper ───
+function TiltCard({ children, className, style, ...props }) {
+  const ref = useRef(null);
+
+  const handleMouseMove = useCallback((e) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    el.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale3d(1.02, 1.02, 1.02)`;
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    const el = ref.current;
+    if (el) el.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)';
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{ ...style, transition: 'transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)', willChange: 'transform' }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
 
 const projects = [
   {
@@ -98,16 +130,16 @@ export default function DevWork() {
       <div className="max-w-4xl mx-auto px-6 pb-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {projects.map((project, index) => (
-            <motion.div
-              key={index}
-              className="rounded-2xl overflow-hidden transition-colors gradient-border"
-              style={{
-                backgroundColor: 'var(--card-bg)',
-              }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-            >
+            <TiltCard key={index}>
+              <motion.div
+                className="rounded-2xl overflow-hidden transition-colors gradient-border h-full"
+                style={{
+                  backgroundColor: 'var(--card-bg)',
+                }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+              >
               {/* Image area */}
               {project.confidential ? (
                 <div
@@ -209,6 +241,7 @@ export default function DevWork() {
                 )}
               </div>
             </motion.div>
+            </TiltCard>
           ))}
         </div>
       </div>
