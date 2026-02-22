@@ -64,6 +64,14 @@ const projects = [
     image: '/areyouawake.png',  
   },
   {
+    title: 'Portfolio Website',
+    description: "My personal website (the one you're on right now)",
+    tech: ['React', 'Next.js', 'Tailwind CSS', 'Framer Motion'],
+    year: '2024',
+    liveLink: 'https://joshuali.work', 
+    image: '/port.jpeg',  
+  },
+  {
     title: 'Gen AI Playground',
     description: 'A generative AI sandbox that allows you to experiment with different models and prompts in a user-friendly interface.',
     tech: ['Next.js', 'AWS', 'Supabase', 'Stripe'],
