@@ -90,7 +90,7 @@ export default function Gallery() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          Travel, events, and everything in between.
+          Photos I've taken over the years.
         </motion.p>
       </section>
 
