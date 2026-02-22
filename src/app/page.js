@@ -1,180 +1,539 @@
 // src/app/page.js
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import Image from 'next/image';
 
-// Simple text component without ripple effect
-const SimpleText = ({ text, className = "" }) => {
+// ─── Scroll-triggered fade-in wrapper ───
+const FadeIn = ({ children, delay = 0 }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+
   return (
-    <h1 className={`text-6xl font-extrabold text-white mb-4 ${className}`}>
-      {text}
-    </h1>
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.1, 0.25, 1] }}
+    >
+      {children}
+    </motion.div>
   );
 };
 
-
-// Enhanced responsive text component
-const ResponsiveText = ({ text, className = "", isMain = false }) => {
-  return (
-    <h1 className={`
-      ${isMain ? 'text-4xl md:text-6xl' : 'text-3xl md:text-4xl'} 
-      font-extrabold text-white mb-4 
-      ${className}
-      transition-all duration-300
-      hover:scale-[1.02] hover:translate-y-[-2px]
-    `}>
-      {text.split('').map((char, i) => (
-        <span 
-          key={i} 
-          className="inline-block hover:translate-y-[-3px] transition-transform duration-200"
-          style={{ transitionDelay: `${i * 20}ms` }}
-        >
-          {char === ' ' ? '\u00A0' : char}
-        </span>
-      ))}
-    </h1>
-  );
-};
-
-const ExperienceItem = ({ title, children }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+// ─── Timeline item ───
+const TimelineItem = ({ year, title, organization, description, side = 'left', isLast = false }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
 
   return (
-    <div className="mb-6">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full text-left"
-      >
-        <h3 className="text-xl font-medium">{title}</h3>
+    <div className="relative grid grid-cols-[1fr_auto_1fr] gap-4 md:gap-8">
+      {/* Left content */}
+      <div className={`${side === 'left' ? 'text-right' : ''} py-6 ${side === 'right' ? 'hidden md:block' : ''}`}>
+        {side === 'left' && (
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <p className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
+              {year}
+            </p>
+            <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+              {title}
+            </h3>
+            <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+              {organization}
+            </p>
+            {description && (
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
+                {description}
+              </p>
+            )}
+          </motion.div>
+        )}
+        {side === 'right' && (
+          <div className="hidden md:block" />
+        )}
+      </div>
+
+      {/* Center line + dot */}
+      <div className="flex flex-col items-center">
         <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 9L12 15L18 9" stroke="white" strokeWidth="2"/>
-          </svg>
-        </motion.div>
-      </button>
-      
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{ 
-          height: isOpen ? 'auto' : 0,
-          opacity: isOpen ? 1 : 0
-        }}
-        transition={{ duration: 0.3 }}
-        className="overflow-hidden"
-      >
-        <div className="pt-4 pb-2">
-          {children}
+          initial={{ scale: 0 }}
+          animate={isInView ? { scale: 1 } : {}}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="w-2.5 h-2.5 rounded-full shrink-0 mt-7"
+          style={{ background: 'var(--gradient-primary)' }}
+        />
+        {!isLast && (
+          <div className="w-px flex-1" style={{ backgroundColor: 'var(--timeline-line)' }} />
+        )}
+      </div>
+
+      {/* Right content */}
+      <div className={`py-6 ${side === 'left' ? 'hidden md:block' : ''}`}>
+        {side === 'right' && (
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0, x: 20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <p className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
+              {year}
+            </p>
+            <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+              {title}
+            </h3>
+            <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+              {organization}
+            </p>
+            {description && (
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
+                {description}
+              </p>
+            )}
+          </motion.div>
+        )}
+        {side === 'left' && (
+          <div className="hidden md:block" />
+        )}
+      </div>
+
+      {/* Mobile: show content on the right side regardless */}
+      {side === 'left' && (
+        <div className="md:hidden col-start-3 row-start-1 py-6">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <p className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
+              {year}
+            </p>
+            <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+              {title}
+            </h3>
+            <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+              {organization}
+            </p>
+            {description && (
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
+                {description}
+              </p>
+            )}
+          </motion.div>
         </div>
+      )}
+      {side === 'right' && (
+        <div className="md:hidden col-start-3 row-start-1 py-6">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <p className="text-xs font-medium tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
+              {year}
+            </p>
+            <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+              {title}
+            </h3>
+            <p className="text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>
+              {organization}
+            </p>
+            {description && (
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
+                {description}
+              </p>
+            )}
+          </motion.div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Mobile timeline (simpler, always right-aligned) ───
+const MobileTimelineItem = ({ year, title, organization, description, isLast = false }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+
+  return (
+    <div className="relative flex gap-4">
+      {/* Line + dot */}
+      <div className="flex flex-col items-center">
+        <motion.div
+          ref={ref}
+          initial={{ scale: 0 }}
+          animate={isInView ? { scale: 1 } : {}}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="w-2 h-2 rounded-full shrink-0 mt-2"
+          style={{ background: 'var(--gradient-primary)' }}
+        />
+        {!isLast && (
+          <div className="w-px flex-1" style={{ backgroundColor: 'var(--timeline-line)' }} />
+        )}
+      </div>
+
+      {/* Content */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+        className="pb-8"
+      >
+        <p className="text-xs font-medium tracking-widest uppercase mb-1" style={{ color: 'var(--text-tertiary)' }}>
+          {year}
+        </p>
+        <h3 className="text-base font-semibold mb-0.5" style={{ color: 'var(--text-primary)' }}>
+          {title}
+        </h3>
+        <p className="text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>
+          {organization}
+        </p>
+        {description && (
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--text-tertiary)' }}>
+            {description}
+          </p>
+        )}
       </motion.div>
     </div>
   );
 };
 
+// ─── Experience data ───
+const experiences = [
+  {
+    year: 'Feb 2026 - Present',
+    title: 'Solutions Engineer I',
+    organization: 'Partly',
+    description: null,
+  },
+  {
+    year: 'Nov - Feb 2026',
+    title: 'Technical Solutions Engineer Intern',
+    organization: 'Partly',
+    description: null,
+  },
+  {
+    year: 'Jul 2025 - Present',
+    title: 'Senior Advisor',
+    organization: 'UOACS - University of Auckland CompSci Society',
+    description: 'Stepped back from the presidency to an advisory role, supporting the next generation of leadership for the society I founded.',
+  },
+  {
+    year: '2024 - Jul 2025',
+    title: 'Founding President',
+    organization: 'UOACS - University of Auckland CompSci Society',
+    description: 'Founded the computer science society at New Zealand\'s largest university. Grew it from nothing to 450+ paid members, five figures in sponsorship revenue, and a team of 22 executives.',
+  },
+  {
+    year: '2025 - Nov 2025',
+    title: 'UX/UI Designer',
+    organization: 'WDCC - MedRevue Project',
+    description: 'Designing the interface for the Auckland Med Revue, an annual charity variety show by University of Auckland medical students.',
+  },
+  {
+    year: '2025 - July 2025',
+    title: 'Generalist Volunteer',
+    organization: 'MyUniClub',
+    description: 'Advisory role guiding the founding team of this SaaS startup for university clubs.',
+  },
+  {
+    year: '2025 - Nov 2025',
+    title: 'Outreach Executive',
+    organization: 'Velocity',
+    description: 'Built community and set up events for the entrepreneurship and innovation club.',
+  },
+  {
+    year: '2023 - Nov 2025',
+    title: 'Keyholder',
+    organization: 'AS Colour',
+    description: 'Helped customers find the right balance between their needs and wants, sharpening interpersonal skills in a commission-based environment.',
+  },
+  {
+    year: '2024',
+    title: 'Functional Analyst Intern',
+    organization: 'University of Auckland',
+    description: null,
+  },
+  {
+    year: '2024',
+    title: 'Software Developer',
+    organization: 'WDCC - Passport',
+    description: null,
+  },
+  {
+    year: '2021 - 2023',
+    title: 'Piano Teacher',
+    organization: 'Self-employed',
+    description: null,
+  },
+  {
+    year: '2022 - 2023',
+    title: 'Customer Service Representative',
+    organization: 'Briscoes Head Office',
+    description: null,
+  },
+  {
+    year: '2020 - 2022',
+    title: 'Sales Assistant',
+    organization: 'Briscoes',
+    description: null,
+  },
+  {
+    year: '2019 - 2020',
+    title: 'After School Care Helper',
+    organization: 'sKids',
+    description: null,
+  },
+  {
+    year: '2019',
+    title: 'Pharmacy Assistant',
+    organization: 'Chemist Warehouse',
+    description: null,
+  },
+];
+
 export default function Home() {
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-[calc(100vh-5rem)]">
-        <div className="text-center mb-32 w-full">
-          <ResponsiveText text="JOSHUA LI's" isMain />
-          <ResponsiveText
-            text="Portfolio"
-            className="italic font-bold"
-            style={{ fontFamily: "'Crimson Text', serif" }}
-          />
+      {/* ─── Hero ─── */}
+      <section className="min-h-[90vh] flex flex-col items-center justify-center px-6 relative overflow-hidden">
+        {/* Gradient orbs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="gradient-orb gradient-orb-1" style={{ top: '15%', left: '10%' }} />
+          <div className="gradient-orb gradient-orb-2" style={{ top: '50%', right: '5%' }} />
+          <div className="gradient-orb gradient-orb-3" style={{ bottom: '10%', left: '40%' }} />
         </div>
 
-        <button
-          onClick={() => {
-            window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-          }}
-          className="mt-10 animate-bounce"
+        <motion.div
+          className="text-center relative z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
         >
-          <svg width="74" height="60" viewBox="0 0 74 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M33.4645 58.5355C35.4171 60.4882 38.5829 60.4882 40.5355 58.5355L72.3553 26.7157C74.308 24.7631 74.308 21.5973 72.3553 19.6447C70.4027 17.692 67.2369 17.692 65.2843 19.6447L37 47.9289L8.71573 19.6447C6.76311 17.692 3.59728 17.692 1.64466 19.6447C-0.307961 21.5973 -0.307961 24.7631 1.64466 26.7157L33.4645 58.5355ZM32 1.58962e-09L32 55L42 55L42 -1.58962e-09L32 1.58962e-09Z" fill="white" />
-          </svg>
-        </button>
+          <motion.h1
+            className="text-5xl md:text-7xl font-bold tracking-tight mb-4"
+            style={{ letterSpacing: '-0.04em' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <span className="gradient-text">Joshua Li</span>
+          </motion.h1>
+          <motion.p
+            className="text-lg md:text-xl max-w-md mx-auto"
+            style={{ color: 'var(--text-secondary)' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            Solutions Engineer at Partly
+          </motion.p>
+          <motion.p
+            className="text-sm mt-2"
+            style={{ color: 'var(--text-tertiary)' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            BSc Computer Science & IT Management
+          </motion.p>
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-10 z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.8 }}
+        >
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <svg width="20" height="30" viewBox="0 0 20 30" fill="none">
+              <rect x="1" y="1" width="18" height="28" rx="9" stroke="var(--text-tertiary)" strokeWidth="1.5" />
+              <motion.circle
+                cx="10" cy="8" r="2"
+                fill="var(--text-tertiary)"
+                animate={{ cy: [8, 18, 8] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            </svg>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ─── About ─── */}
+      <section className="py-24 px-6">
+        <div className="max-w-2xl mx-auto">
+          <FadeIn>
+            <p className="text-xs font-medium tracking-widest uppercase mb-6" style={{ color: 'var(--text-tertiary)' }}>
+              About
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <p className="text-lg md:text-xl leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+              Hi, I'm Josh. I graduated from the University of Auckland in November 2025 with a BSc in Computer Science and IT Management, and I now work full-time as a Solutions Engineer at Partly.
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.2}>
+            <p className="text-lg md:text-xl leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+              Outside of work, I serve as a Senior Advisor for UOACS, the computer science society I founded at the University of Auckland. I also build websites and apps.
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.3}>
+            <p className="text-lg md:text-xl leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
+              On weekends, I busk at the Takapuna markets and play piano and lead music for my church's band.
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.4}>
+            <p className="text-lg md:text-xl leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              In my free time, I watch the Lakers dominate and play a pretty poor Galio in the mid lane. Oh, and I love to eat.
+            </p>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ─── Gradient divider ─── */}
+      <div className="max-w-2xl mx-auto px-6">
+        <hr className="gradient-divider" />
       </div>
 
-      {/* The rest of your content */}
-      <div className="container mx-auto px-4 py-12 flex flex-col items-center justify-center bg-[#0A2ECE]">
-        {/* About Section */}
-        <div className='max-w-2xl mb-16'>
-          <h2 className='text-3xl font-bold mb-6 pt-3'>about:</h2>
-          <div className='space-y-4 text-lg'>
-            <p>Hi! My name is Josh, and welcome to my portfolio. I am in my final year of Computer Science and IT Management at the University of Auckland, on track to complete my studies by November 2025.</p>
-            <p>During the week, I serve as the President of UOACS, an Outreach Executive at Velocity, a UX/UI Designer for WDCC, and a volunteer evangelist for MyUniClub.</p>
-            <p>On weekends, I busk at the Takapuna markets, a keyholder at AS Colour and also the pianist and MD for my church's band.</p>
-            <p>In my free time I watch the Lakers dominate and I play a pretty poor Galio in the mid lane. Oh and I love to eat.</p>
+      {/* ─── Education ─── */}
+      <section className="py-24 px-6" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
+        <div className="max-w-2xl mx-auto">
+          <FadeIn>
+            <p className="text-xs font-medium tracking-widest uppercase mb-6" style={{ color: 'var(--text-tertiary)' }}>
+              Education
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <div
+              className="rounded-2xl p-6 md:p-8 gradient-border"
+              style={{ backgroundColor: 'var(--card-bg)' }}
+            >
+              <h3 className="text-xl font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                University of Auckland
+              </h3>
+              <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
+                Bachelor of Science — Computer Science & IT Management, 2023 - 2025 (Graduated)
+              </p>
+              <div className="border-t pt-4" style={{ borderColor: 'var(--border-light)' }}>
+                <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: 'var(--text-tertiary)' }}>
+                  Relevant Coursework
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    'Machine Learning',
+                    'Object Oriented Development',
+                    'Data Management',
+                    'Computer Organisation',
+                    'Data Wrangling & Big Data',
+                    'Digital Systems',
+                    'Mathematics for CS',
+                    'Information Tools for Business',
+                  ].map((course) => (
+                    <span
+                      key={course}
+                      className="text-xs px-3 py-1.5 rounded-full"
+                      style={{
+                        backgroundColor: 'var(--tag-bg)',
+                        color: 'var(--tag-text)',
+                      }}
+                    >
+                      {course}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ─── Gradient divider ─── */}
+      <div className="max-w-3xl mx-auto px-6">
+        <hr className="gradient-divider" />
+      </div>
+
+      {/* ─── Experience Timeline ─── */}
+      <section className="py-24 px-6">
+        <div className="max-w-3xl mx-auto">
+          <FadeIn>
+            <p className="text-xs font-medium tracking-widest uppercase mb-12 text-center" style={{ color: 'var(--text-tertiary)' }}>
+              Experience
+            </p>
+          </FadeIn>
+
+          {/* Desktop timeline (alternating) */}
+          <div className="hidden md:block">
+            {experiences.map((exp, index) => (
+              <TimelineItem
+                key={index}
+                year={exp.year}
+                title={exp.title}
+                organization={exp.organization}
+                description={exp.description}
+                side={index % 2 === 0 ? 'left' : 'right'}
+                isLast={index === experiences.length - 1}
+              />
+            ))}
+          </div>
+
+          {/* Mobile timeline (single column) */}
+          <div className="md:hidden pl-2">
+            {experiences.map((exp, index) => (
+              <MobileTimelineItem
+                key={index}
+                year={exp.year}
+                title={exp.title}
+                organization={exp.organization}
+                description={exp.description}
+                isLast={index === experiences.length - 1}
+              />
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* Education Section */}
-        <div className='max-w-2xl w-full'>
-          <h2 className='text-3xl font-bold mb-6'>education:</h2>
-          <div className='space-y-8'>
-            <div>
-              <ExperienceItem title="University of Auckland">
-                <p>Bachelor of Science, Majoring in Computer Science and IT Management        -- 2023-2025</p>
-                <h4 className='text 2xl font-bold'>Relevant Courses:</h4>
-                <p>Principles of Programming, Data Wrangling and Big Data, Data Management, Computer Organisation, Object Oriented Software Development, Digital Systems, Mathematics for Computer Science, Information Tools for Business, Machine Learning. </p>
-              </ExperienceItem>
-            </div>
+      {/* ─── Moments ─── */}
+      <section className="py-24 px-6" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
+        <div className="max-w-4xl mx-auto">
+          <FadeIn>
+            <p className="text-xs font-medium tracking-widest uppercase mb-12 text-center" style={{ color: 'var(--text-tertiary)' }}>
+              Moments
+            </p>
+          </FadeIn>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            {[
+              '/main-page-photos/IMG_3703.JPG',
+              '/main-page-photos/DSC07811 3.jpg',
+              '/main-page-photos/DSC08366.jpg',
+              '/main-page-photos/DSC08856.JPG',
+              '/main-page-photos/IMG_3636.jpeg',
+              '/main-page-photos/IMG_8822.JPG',
+            ].map((src, i) => (
+              <FadeIn key={i} delay={i * 0.05}>
+                <div className="aspect-[4/3] rounded-xl overflow-hidden relative">
+                  <Image
+                    src={src}
+                    alt={`Moment ${i + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-500 hover:scale-105"
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                  />
+                </div>
+              </FadeIn>
+            ))}
           </div>
         </div>
-        
-        {/* Experience Section */}
-        <div className='max-w-2xl w-full'>
-          <h2 className='text-3xl font-bold mb-6 pt-6'>experience:</h2>
-          <div className='space-y-8'>
-            <div>
-              <h3 className='text-2xl font-semibold mb-2'>Currently:</h3>
-              <ExperienceItem title="Founding President of UOACS (University of Auckland CompSci Society)">
-                <p>Halfway through my degree, I realized I should do a bit more at uni. I always had a thought in the back of my mind wondering why there wasn't a computer science society at the largest university in New Zealand. So... I created one.</p>
-                <p className='mt-4'>From no money, no team, no members, no formal recognition to over five figures in sponsorship revenue, 450+ paid members and an awesome team of 22 executives that help me run this club. It has been the most rewarding and stressful project of my life and I wouldn't change it for the world.</p>
-              </ExperienceItem>
-            </div>
-
-            {/* Other ExperienceItems... */}
-            <div>
-              <ExperienceItem title="Outreach Executive at Velocity">
-                <p>I always heard about Velocity and the opportunities they provide and never took action until my friend Ray told me about the applications. Following my experience creating the club, I found a knack for building things from the group up and Velocity seemed like the best place to go</p>
-                <p className='mt-4'>Since joining, I've made so many amazing memories, met the most insipiring people and have helped set up events for the community.</p>
-              </ExperienceItem>
-              </div>
-
-              <div>
-                <ExperienceItem title="UX/UI Designer at WDCC (MedRevue)">
-                <p>This year I have joined WDCC as a pure designer, working on the MedRevue project. The Auckland Med Revue is an annual charity variety show performed by University of Auckland medical students, featuring humorous skits, songs, and dances, with proceeds supporting causes like the Cancer Society of New Zealand.</p>
-                </ExperienceItem>
-              </div>
-
-              <div>
-                <ExperienceItem title="Generalist Volunteer at MyUniClub">
-                <p>MyUniClub is a fresh startup that is working towards becoming the best Saas for university clubs. My role is more of an advisory position to guide the founding team in the right direction since I am heavily involved in clubs.</p>
-                </ExperienceItem>
-              </div>
-
-              <div>
-                <ExperienceItem title="Keyholder at AS Colour">
-                <p>I help customers find the right balance between their needs and wants while strategically upselling products. Working in a commission-based environment, I quickly read people and adapt to their preferences, ensuring a great experience while driving sales. This role continuously sharpens my interpersonal skills and quick thinking.</p>
-                </ExperienceItem>
-              </div>
-
-              <h3 className='text-2xl font-semibold mb-2'>Previously:</h3>
-              <h3 className='text-xl font-medium mb-2'>Functional Analyst Intern at UOA</h3>
-              <h3 className='text-xl font-medium mb-2'>Software Developer at WDCC (Passport)</h3>
-              <h3 className='text-xl font-medium mb-2'>Piano Teacher</h3>
-              <h3 className='text-xl font-medium mb-2'>Customer Service Representative at Briscoes Head Office</h3>
-              <h3 className='text-xl font-medium mb-2'>Sales Assistant at Briscoes PC</h3>
-              <h3 className='text-xl font-medium mb-2'>After School Care Helper at sKids</h3>
-              <h3 className='text-xl font-medium mb-2'>Pharmacy Assistant at Chemist Warehouse</h3>
-            </div>
-          </div>
-        </div>
+      </section>
     </>
   );
 }
