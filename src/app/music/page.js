@@ -1208,7 +1208,7 @@ export default function MusicPage() {
 
                 {isPlaying && (
                   <p className="text-[10px] mt-3" style={{ color: 'var(--text-tertiary)' }}>
-                    Play the piano on top of the progression — your notes won&apos;t interfere with chord playback.
+                    Play the piano on top of the progression. Your notes won&apos;t interfere with chord playback.
                   </p>
                 )}
               </div>
@@ -1218,15 +1218,6 @@ export default function MusicPage() {
               </p>
             )}
           </motion.div>
-        </div>
-      </section>
-
-      {/* Hint footer */}
-      <section className="px-6 pb-20">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
-            All synthesized in real-time with the Web Audio API — no samples, just math.
-          </p>
         </div>
       </section>
     </>
