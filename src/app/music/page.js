@@ -3,6 +3,7 @@
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 
 // ─── Note / frequency helpers ───
 const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -103,6 +104,7 @@ function usePianoSynth() {
   const gainRef = useRef(null);
   const activeNotes = useRef(new Map());
   const voiceRef = useRef('piano');
+  const unlocked = useRef(false);
 
   const getCtx = useCallback(() => {
     if (ctxRef.current) return ctxRef.current;
@@ -114,6 +116,23 @@ function usePianoSynth() {
     gainRef.current = master;
     return ctx;
   }, []);
+
+  // Unlock audio context — must be called from a user gesture (click/touch)
+  // On iOS/mobile, AudioContext starts suspended and can only resume during a gesture
+  const unlock = useCallback(() => {
+    const ctx = getCtx();
+    if (unlocked.current && ctx.state === 'running') return;
+    // Play a silent buffer to unlock on iOS
+    const buf = ctx.createBuffer(1, 1, ctx.sampleRate);
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(ctx.destination);
+    src.start(0);
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
+    unlocked.current = true;
+  }, [getCtx]);
 
   const setVoice = useCallback((v) => { voiceRef.current = v; }, []);
 
@@ -283,12 +302,12 @@ function usePianoSynth() {
     }, duration * 1000);
   }, [noteOn, noteOff]);
 
-  return { noteOn, noteOff, playChord, setVoice };
+  return { noteOn, noteOff, playChord, setVoice, unlock };
 }
 
 // ─── Main Music Page ───
 export default function MusicPage() {
-  const { noteOn, noteOff, playChord, setVoice } = usePianoSynth();
+  const { noteOn, noteOff, playChord, setVoice, unlock } = usePianoSynth();
   const [voice, setVoiceState] = useState('piano');
 
   // Sync voice to synth
@@ -367,6 +386,7 @@ export default function MusicPage() {
 
   // Play a chord and highlight keys (for chord explorer — separate from progression)
   const handlePlayChord = useCallback((root, type) => {
+    unlock();
     const midiNotes = getChordMidi(root, type);
     const labels = midiNotes.map(m => {
       const note = NOTE_NAMES[m % 12];
@@ -377,7 +397,7 @@ export default function MusicPage() {
     setChordHighlightKeys(new Set(labels));
     playChord(midiNotes, 0.9);
     setTimeout(() => setChordHighlightKeys(new Set()), 900);
-  }, [getChordMidi, playChord]);
+  }, [getChordMidi, playChord, unlock]);
 
   // Stop progression playback
   const stopProgression = useCallback(() => {
@@ -450,11 +470,12 @@ export default function MusicPage() {
     }
     if (progression.length === 0) return;
 
+    unlock();
     isPlayingRef.current = true;
     setIsPlaying(true);
     chordIndexRef.current = 0;
     playNextChord();
-  }, [isPlaying, progression, stopProgression, playNextChord]);
+  }, [isPlaying, progression, stopProgression, playNextChord, unlock]);
 
   // Clean up on unmount
   useEffect(() => {
@@ -509,9 +530,10 @@ export default function MusicPage() {
 
   // Piano key press handler (mouse/touch)
   const handleKeyPress = useCallback((key) => {
+    unlock();
     noteOn(key.midi);
     setManualKeys(prev => new Set([...prev, key.label]));
-  }, [noteOn]);
+  }, [noteOn, unlock]);
 
   const handleKeyRelease = useCallback((key) => {
     noteOff(key.midi);
@@ -542,8 +564,89 @@ export default function MusicPage() {
     return { isManual, isChordHL, isActive: isManual || isChordHL, inScale };
   }, [manualKeys, chordHighlightKeys, isInScale]);
 
+  // Mobile portrait detection
+  const [isMobilePortrait, setIsMobilePortrait] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      const mobile = window.innerWidth < 768;
+      const portrait = window.innerHeight > window.innerWidth;
+      setIsMobilePortrait(mobile && portrait);
+    };
+    check();
+    window.addEventListener('resize', check);
+    window.addEventListener('orientationchange', () => setTimeout(check, 100));
+    return () => {
+      window.removeEventListener('resize', check);
+      window.removeEventListener('orientationchange', check);
+    };
+  }, []);
+
   return (
     <>
+      {/* Mobile portrait overlay */}
+      <AnimatePresence>
+        {isMobilePortrait && !dismissed && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center px-8 text-center"
+            style={{ backgroundColor: 'var(--bg-primary)' }}
+          >
+            {/* Rotate phone icon */}
+            <motion.div
+              animate={{ rotate: [0, -90, -90, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="mb-6"
+            >
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--text-secondary)"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="6" y="3" width="12" height="18" rx="2" />
+                <line x1="12" y1="18" x2="12" y2="18.01" />
+              </svg>
+            </motion.div>
+
+            <h2 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+              Rotate for the best experience
+            </h2>
+            <p className="text-sm mb-8 max-w-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              The piano works best in landscape mode. Turn your phone sideways to play.
+            </p>
+
+            <div className="flex flex-col gap-3 w-full max-w-xs">
+              <button
+                onClick={() => setDismissed(true)}
+                className="px-6 py-2.5 rounded-full text-sm font-medium text-white transition-opacity duration-200"
+                style={{ background: 'var(--gradient-primary)' }}
+              >
+                Continue anyway
+              </button>
+              <Link
+                href="/"
+                className="px-6 py-2.5 rounded-full text-sm border text-center transition-all duration-200"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-secondary)',
+                }}
+              >
+                Back to home
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <section className="pt-32 pb-12 px-6 text-center">
         <motion.p
