@@ -4,6 +4,9 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
+import ShaderHero from '../components/ShaderHero';
+import ParallaxCard from '../components/ParallaxCard';
+import LiveThemeEditor from '../components/LiveThemeEditor';
 
 // ─── Scroll-triggered fade-in wrapper ───
 const FadeIn = ({ children, delay = 0 }) => {
@@ -252,8 +255,11 @@ export default function Home() {
     <>
       {/* ─── Hero ─── */}
       <section className="min-h-[90vh] flex flex-col items-center justify-center px-6 relative overflow-hidden">
+        {/* WebGL fluid noise background */}
+        <ShaderHero />
+
         {/* Gradient orbs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }}>
           <div className="gradient-orb gradient-orb-1" style={{ top: '15%', left: '10%' }} />
           <div className="gradient-orb gradient-orb-2" style={{ top: '50%', right: '5%' }} />
           <div className="gradient-orb gradient-orb-3" style={{ bottom: '10%', left: '40%' }} />
@@ -381,53 +387,72 @@ export default function Home() {
 
       {/* ─── Education ─── */}
       <section className="py-24 px-6" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <FadeIn>
             <p className="text-xs font-medium tracking-widest uppercase mb-6" style={{ color: 'var(--text-tertiary)' }}>
               Education
             </p>
           </FadeIn>
-          <FadeIn delay={0.1}>
-            <div
-              className="rounded-2xl p-6 md:p-8 gradient-border"
-              style={{ backgroundColor: 'var(--card-bg)' }}
-            >
-              <h3 className="text-xl font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
-                University of Auckland
-              </h3>
-              <p className="text-sm mb-4" style={{ color: 'var(--text-secondary)' }}>
-                Bachelor of Science — Computer Science & IT Management, 2023 - 2025 (Graduated)
-              </p>
-              <div className="border-t pt-4" style={{ borderColor: 'var(--border-light)' }}>
-                <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: 'var(--text-tertiary)' }}>
-                  Relevant Coursework
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    'Machine Learning',
-                    'Object Oriented Development',
-                    'Data Management',
-                    'Computer Organisation',
-                    'Data Wrangling & Big Data',
-                    'Digital Systems',
-                    'Mathematics for CS',
-                    'Information Tools for Business',
-                  ].map((course) => (
-                    <span
-                      key={course}
-                      className="text-xs px-3 py-1.5 rounded-full"
-                      style={{
-                        backgroundColor: 'var(--tag-bg)',
-                        color: 'var(--tag-text)',
-                      }}
-                    >
-                      {course}
-                    </span>
-                  ))}
-                </div>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-start">
+            {/* Card — takes 3 of 5 cols */}
+            <div className="md:col-span-3">
+              <FadeIn delay={0.1}>
+                <ParallaxCard
+                  className="rounded-2xl p-6 md:p-8 gradient-border"
+                  style={{ backgroundColor: 'var(--card-bg)' }}
+                >
+                  <h3 data-depth="1" className="text-xl font-semibold mb-1" style={{ color: 'var(--text-primary)', transition: 'transform 0.3s ease-out' }}>
+                    University of Auckland
+                  </h3>
+                  <p data-depth="0.5" className="text-sm mb-4" style={{ color: 'var(--text-secondary)', transition: 'transform 0.3s ease-out' }}>
+                    Bachelor of Science — Computer Science & IT Management, 2023 - 2025 (Graduated)
+                  </p>
+                  <div data-depth="1.5" className="border-t pt-4" style={{ borderColor: 'var(--border-light)', transition: 'transform 0.3s ease-out' }}>
+                    <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: 'var(--text-tertiary)' }}>
+                      Relevant Coursework
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        'Data Structures & Algorithms',
+                        'Object Oriented Development',
+                        'Data Management',
+                        'Computer Organisation',
+                        'Data Wrangling & Big Data',
+                        'Digital Systems',
+                        'Mathematics for CS',
+                      ].map((course) => (
+                        <span
+                          key={course}
+                          className="text-xs px-3 py-1.5 rounded-full"
+                          style={{
+                            backgroundColor: 'var(--tag-bg)',
+                            color: 'var(--tag-text)',
+                          }}
+                        >
+                          {course}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </ParallaxCard>
+              </FadeIn>
             </div>
-          </FadeIn>
+
+            {/* Image block — takes 2 of 5 cols */}
+            <div className="md:col-span-2 flex flex-col gap-3">
+              <FadeIn delay={0.2}>
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden relative">
+                  <Image
+                    src="/woods.jpg"
+                    alt="University life"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                  />
+                </div>
+              </FadeIn>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -473,6 +498,31 @@ export default function Home() {
               />
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ─── Gradient divider ─── */}
+      <div className="max-w-3xl mx-auto px-6">
+        <hr className="gradient-divider" />
+      </div>
+
+      {/* ─── Live Theme Editor ─── */}
+      <section className="py-24 px-6">
+        <div className="max-w-2xl mx-auto">
+          <FadeIn>
+            <p className="text-xs font-medium tracking-widest uppercase mb-3" style={{ color: 'var(--text-tertiary)' }}>
+              Playground
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+              <span className="gradient-text">Make it yours.</span>
+            </h2>
+            <p className="text-sm mb-8 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              This site is built on CSS custom properties. Pick any color below and watch the entire theme update in real-time.
+            </p>
+          </FadeIn>
+          <FadeIn delay={0.15}>
+            <LiveThemeEditor />
+          </FadeIn>
         </div>
       </section>
 

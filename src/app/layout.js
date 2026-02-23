@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SoundProvider, useSound, MuteToggle } from '../components/SoundProvider';
+import CommandPalette, { useCommandPalette } from '../components/CommandPalette';
 import './globals.css';
 
 // ─── Custom cursor with CSS trail ───
@@ -89,7 +91,7 @@ function CustomCursor() {
 }
 
 // ─── Magnetic hover link (desktop only) ───
-function MagneticLink({ href, children, className, style }) {
+function MagneticLink({ href, children, className, style, onClick }) {
   const ref = useRef(null);
 
   const handleMouseMove = (e) => {
@@ -114,6 +116,7 @@ function MagneticLink({ href, children, className, style }) {
       style={{ ...style, transition: 'transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.2s ease', willChange: 'transform' }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
     >
       {children}
     </Link>
@@ -121,13 +124,9 @@ function MagneticLink({ href, children, className, style }) {
 }
 
 export default function RootLayout({ children }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
-  const [scrolled, setScrolled] = useState(false);
-  const pathname = usePathname();
 
   useEffect(() => {
-    // Check for saved preference; default to dark
     const saved = localStorage.getItem('theme');
     if (saved) {
       setDarkMode(saved === 'dark');
@@ -140,6 +139,33 @@ export default function RootLayout({ children }) {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
     localStorage.setItem('theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
+
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <title>Joshua Li</title>
+        <meta name="description" content="Joshua Li - Portfolio" />
+      </head>
+      <body style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+        <SoundProvider>
+          <CommandPalette darkMode={darkMode} setDarkMode={setDarkMode}>
+            <LayoutInner darkMode={darkMode} setDarkMode={setDarkMode}>
+              {children}
+            </LayoutInner>
+          </CommandPalette>
+        </SoundProvider>
+      </body>
+    </html>
+  );
+}
+
+function LayoutInner({ children, darkMode, setDarkMode }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const sound = useSound();
+  const cmdPalette = useCommandPalette();
+  const prevPathname = useRef(pathname);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -156,16 +182,20 @@ export default function RootLayout({ children }) {
     { href: '/gallery', label: 'Gallery' },
     { href: '/devwork', label: 'Work' },
     { href: '/extracurriculars', label: 'Extracurriculars' },
+    { href: '/music', label: 'Piano' },
     { href: '/contactme', label: 'Contact' },
   ];
 
+  // Play whoosh on page navigation
+  useEffect(() => {
+    if (prevPathname.current !== pathname) {
+      sound?.play('whoosh');
+      prevPathname.current = pathname;
+    }
+  }, [pathname, sound]);
+
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <title>Joshua Li</title>
-        <meta name="description" content="Joshua Li - Portfolio" />
-      </head>
-      <body style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+    <>
         <CustomCursor />
         {/* Navigation */}
         <header
@@ -187,6 +217,7 @@ export default function RootLayout({ children }) {
               href="/"
               className="text-sm font-medium tracking-tight nav-logo"
               style={{ color: 'var(--text-primary)' }}
+              onClick={() => sound?.play('click')}
             >
               Joshua Li
             </Link>
@@ -199,14 +230,44 @@ export default function RootLayout({ children }) {
                   href={link.href}
                   className="text-sm transition-opacity hover:opacity-60"
                   style={{ color: 'var(--text-secondary)' }}
+                  onClick={() => sound?.play('click')}
                 >
                   {link.label}
                 </MagneticLink>
               ))}
 
+              {/* Command Palette Trigger */}
+              <button
+                onClick={() => cmdPalette?.openPalette()}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs transition-all duration-200"
+                style={{
+                  borderColor: 'var(--border-color)',
+                  color: 'var(--text-tertiary)',
+                  backgroundColor: 'var(--bg-tertiary)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--text-tertiary)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border-color)';
+                  e.currentTarget.style.color = 'var(--text-tertiary)';
+                }}
+                aria-label="Open command palette"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="M21 21l-4.35-4.35" />
+                </svg>
+                <span className="font-mono">{'\u2318'}K</span>
+              </button>
+
+              {/* Sound Mute Toggle */}
+              <MuteToggle />
+
               {/* Dark Mode Toggle */}
               <button
-                onClick={() => setDarkMode(!darkMode)}
+                onClick={() => { setDarkMode(!darkMode); sound?.play('toggle'); }}
                 className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
                 style={{ color: 'var(--text-secondary)' }}
                 aria-label="Toggle dark mode"
@@ -224,10 +285,11 @@ export default function RootLayout({ children }) {
               </button>
             </nav>
 
-            {/* Mobile: Theme toggle + Hamburger */}
-            <div className="flex md:hidden items-center gap-3">
+            {/* Mobile: Sound toggle + Theme toggle + Hamburger */}
+            <div className="flex md:hidden items-center gap-2">
+              <MuteToggle />
               <button
-                onClick={() => setDarkMode(!darkMode)}
+                onClick={() => { setDarkMode(!darkMode); sound?.play('toggle'); }}
                 className="w-8 h-8 flex items-center justify-center"
                 style={{ color: 'var(--text-secondary)' }}
                 aria-label="Toggle dark mode"
@@ -277,7 +339,7 @@ export default function RootLayout({ children }) {
                     href={link.href}
                     className="text-sm py-1 transition-opacity hover:opacity-60"
                     style={{ color: 'var(--text-secondary)' }}
-                    onClick={closeMobileMenu}
+                    onClick={() => { closeMobileMenu(); sound?.play('click'); }}
                   >
                     {link.label}
                   </Link>
@@ -350,7 +412,6 @@ export default function RootLayout({ children }) {
             </div>
           </div>
         </footer>
-      </body>
-    </html>
+    </>
   );
 }
