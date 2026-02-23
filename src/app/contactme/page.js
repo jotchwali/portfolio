@@ -1,8 +1,9 @@
 // src/app/contactme/page.js
 'use client';
 
-import React, { useRef, useCallback } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import ParallaxCard from '../../components/ParallaxCard';
 
 const FadeIn = ({ children, delay = 0 }) => {
   const ref = useRef(null);
@@ -20,36 +21,6 @@ const FadeIn = ({ children, delay = 0 }) => {
   );
 };
 
-// ─── 3D tilt card wrapper ───
-function TiltCard({ children, className }) {
-  const ref = useRef(null);
-
-  const handleMouseMove = useCallback((e) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    el.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale3d(1.02, 1.02, 1.02)`;
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    const el = ref.current;
-    if (el) el.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)';
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{ transition: 'transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1)', willChange: 'transform' }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      {children}
-    </div>
-  );
-}
 
 const links = [
   {
@@ -124,7 +95,7 @@ export default function Contact() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {links.map((link, index) => (
             <FadeIn key={link.label} delay={index * 0.08}>
-              <TiltCard>
+              <ParallaxCard>
                 <a
                   href={link.href}
                   target={link.href.startsWith('mailto') ? undefined : '_blank'}
@@ -141,7 +112,7 @@ export default function Contact() {
                     e.currentTarget.style.backgroundColor = 'var(--card-bg)';
                   }}
                 >
-                  <div className="flex items-start justify-between mb-4">
+                  <div data-depth="0.5" className="flex items-start justify-between mb-4" style={{ transition: 'transform 0.3s ease-out' }}>
                     <div style={{ color: 'var(--text-primary)' }}>
                       {link.icon}
                     </div>
@@ -153,14 +124,14 @@ export default function Contact() {
                       <path d="M4 10l6-6M4.5 4H10v5.5" />
                     </svg>
                   </div>
-                  <h3 className="text-base font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                  <h3 data-depth="1" className="text-base font-semibold mb-1" style={{ color: 'var(--text-primary)', transition: 'transform 0.3s ease-out' }}>
                     {link.label}
                   </h3>
-                  <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                  <p data-depth="1.5" className="text-sm" style={{ color: 'var(--text-tertiary)', transition: 'transform 0.3s ease-out' }}>
                     {link.description}
                   </p>
                 </a>
-              </TiltCard>
+              </ParallaxCard>
             </FadeIn>
           ))}
         </div>
